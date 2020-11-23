@@ -27,6 +27,34 @@ namespace HangmanGameService
 
     }
 
+    public partial class HangmanGameService : IAccountManager
+    {
+        public void SearchAccount(string email)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            Account account= consult.SearchAccount(email);
+            ServiceAccount serviceAccount = new ServiceAccount();
+            serviceAccount.NickName = account.nickName;
+            serviceAccount.Email = account.email;
+            serviceAccount.PasswordAccount = account.passwordAccount;
+            OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountResponseAccount(serviceAccount);
+        }
+
+        public void SearchPlayer(string nickName)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            Player player = consult.SearchPlayer(nickName);
+            ServicePlayer servicePlayer = new ServicePlayer();
+            servicePlayer.NickName = player.nickName;
+            servicePlayer.NamePlayer = player.namePlayer;
+            servicePlayer.LastName = player.lastName;
+            servicePlayer.ScoreObtained = player.scoreObtained;
+            servicePlayer.StatusPlayer = player.statusPlayer;
+            OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountResponsePlayer(servicePlayer);
+        }
+
+    }
+
     public partial class HangmanGameService : IPlayerManager
     {
         Connection.QueryDB consult = new Connection.QueryDB();
@@ -51,7 +79,7 @@ namespace HangmanGameService
 
         public void Register(ServiceAccount account, ServicePlayer accountPlayer)
         {
-
+            Connection.QueryDB consult = new Connection.QueryDB();
             Account dataAccount = new Account();
             dataAccount.email = account.Email;
             dataAccount.passwordAccount = account.PasswordAccount;
@@ -66,6 +94,12 @@ namespace HangmanGameService
 
             bool register = consult.RegisterPlayer(dataAccount, dataPlayer);
             OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(register);
+        }
+        public void SearchNickNamePlayer(string nickName)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool isValidnickName = consult.SearchNicknamePlayer(nickName);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(isValidnickName);
         }
 
         public void SendEmail(string email, int code)

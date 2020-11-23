@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HangmanGameService.cs" />
+    <Compile Include="IAccountManager.cs" />
     <Compile Include="IHangmanGameService.cs" />
     <Compile Include="IPlayerManager.cs" />
     <Compile Include="ServiceAccount.cs" />
