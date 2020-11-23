@@ -48,12 +48,19 @@ namespace Connection
 			return search;
 		}
 
-		public bool ChangePassword(string email, string password)
+		public bool ChangePassword(string email, string newPassword)
 		{
 			bool update = false;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
-				//db.Account.Attach();
+				Account account = new Account();
+				account = db.Account.SingleOrDefault(accountSearch => accountSearch.email == email);
+				if (account != null)
+				{
+					account.passwordAccount = newPassword;
+					db.SaveChanges();
+					update = true;
+				}
 			}
 			return update;
 		}

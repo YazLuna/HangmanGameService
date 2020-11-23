@@ -43,9 +43,9 @@ namespace HangmanGameService
             OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(emailFound);
         }
 
-        public void ChangePassword(string email, string password)
+        public void ChangePassword(string email, string newPassword)
         {
-            bool change = consult.ChangePassword(email, password);
+            bool change = consult.ChangePassword(email, newPassword);
             OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(change);
         }
 

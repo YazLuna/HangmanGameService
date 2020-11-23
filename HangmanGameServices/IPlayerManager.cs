@@ -17,7 +17,7 @@ namespace HangmanGameService
         void SendEmail(string email, int code);
 
         [OperationContract]
-        void ChangePassword(string email, string password);
+        void ChangePassword(string email, string newPassword);
 
         [OperationContract]
         void SearchEmailPlayer(string email);
