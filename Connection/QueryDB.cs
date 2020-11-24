@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Connection
 {
@@ -94,6 +95,29 @@ namespace Connection
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickName);
+			}
+			return player;
+		}
+
+		public List<Player> SearchBestScoresPlayer()
+		{
+			List<Player> playersOrder = new List<Player>();
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				List<Player>players = db.Player.Where(player => player.scoreObtained > 0).ToList<Player>();
+				playersOrder = players.OrderBy(score => score.scoreObtained).ToList();
+			}
+			return playersOrder;
+		}
+
+		public Player SearchInformationPlayer(string email)
+		{
+			Player player = new Player();
+
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				Account account = db.Account.SingleOrDefault(playerSearch => playerSearch.email == email);
+				player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == account.nickName);
 			}
 			return player;
 		}
