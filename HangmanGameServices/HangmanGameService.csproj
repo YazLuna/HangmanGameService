@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="HangmanGameService.cs" />
     <Compile Include="IAccountManager.cs" />
+    <Compile Include="IChatManager.cs" />
     <Compile Include="IHangmanGameService.cs" />
     <Compile Include="IInformationPlayerManager.cs" />
     <Compile Include="IPlayerManager.cs" />

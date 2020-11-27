@@ -1,15 +1,11 @@
 ﻿using Connection;
-using HangmanGameService;
 using System.ServiceModel;
 using System.Threading;
 using System.Net.Mail;
-using System.Configuration;
-using System.Net.Configuration;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Collections.Generic;
-using System;
 
 namespace HangmanGameService
 {
@@ -152,6 +148,53 @@ namespace HangmanGameService
 				delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
 			smtp.EnableSsl = true;
 			smtp.Send(correo);
+		}
+	}
+
+	public partial class HangmanGameService : IChatManager
+	{
+		private Dictionary<string, List<string>> incomingMessages = new Dictionary<string, List<string>>();
+		private List<ServicePlayer> PlayersConnect = new List<ServicePlayer>();
+		public void ClientConnect(string nickname)
+        {
+			ServicePlayer servicePlayer = new ServicePlayer();
+			servicePlayer.NickName = nickname;
+			PlayersConnect.Add(servicePlayer);
+			incomingMessages.Add(nickname, new List<string>() {
+				"Welcome to HangmanGame chat"});
+			OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseBoolean(true);
+			//guardar el channel
+		}
+		
+		public void GetNewMessage(string nickname)
+        {
+			List<string> myNewMessages = incomingMessages[nickname];
+			incomingMessages[nickname] = new List<string>();
+			OperationContext.Current.GetCallbackChannel<IChatCallback>().PlayerEntryMessage(myNewMessages);
+		}
+
+		public void SendNewMessage(string newMessage, string nickname)
+        {
+			foreach (var players in this.PlayersConnect)
+			{
+				if (!nickname.Equals(players.NickName))
+				{
+					incomingMessages[players.NickName].Add(newMessage);
+				}
+			}
+			//para mandar a todos los jugadores conectados los mensaje o en el getNewMessages
+			OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseBoolean(true);
+		}
+
+		public void GetAllPlayers()
+        {
+			OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseList(PlayersConnect);
+		}
+
+		public void RemoveUser(string nickname)
+		{
+			this.PlayersConnect.RemoveAll(player => player.NickName == nickname);
+			OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseBoolean(true);
 		}
 	}
 }
