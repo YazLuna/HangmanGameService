@@ -20,6 +20,9 @@ namespace HangmanGameService
         public int ConfirmationCode { get; set; }
 
         [DataMember]
+        public int IdAccount { get; set; }
+
+        [DataMember]
         public string NickName { get; set; }
 
     }
