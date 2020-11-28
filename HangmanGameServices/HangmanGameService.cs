@@ -57,6 +57,17 @@ namespace HangmanGameService
 		public void SearchBestScoresPlayer()
 		{
 			Connection.QueryDB consult = new Connection.QueryDB();
+        public void SearchAccount(string email)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            Account account= consult.SearchAccount(email);
+            ServiceAccount serviceAccount = new ServiceAccount();
+            serviceAccount.IdAccount = account.idAccount;
+            serviceAccount.NickName = account.nickName;
+            serviceAccount.Email = account.email;
+            serviceAccount.PasswordAccount = account.passwordAccount;
+            OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountResponseAccount(serviceAccount);
+        }
 
 			List<Player> Player = consult.SearchBestScoresPlayer();
 			List<ServicePlayer> ServicePlayer = new List<ServicePlayer>();
@@ -71,6 +82,8 @@ namespace HangmanGameService
 	}
 
 	public partial class HangmanGameService : IInformationPlayerManager
+    }
+    public partial class HangmanGameService : IPlayerManager
     {
 		public void SearchInformationPlayer(string email)
 		{
@@ -190,6 +203,10 @@ namespace HangmanGameService
         {
 			OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseList(PlayersConnect);
 		}
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool searchNickName = consult.SearchNicknamePlayer(nickName);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(searchNickName);
+        }
 
 		public void RemoveUser(string nickname)
 		{
@@ -197,4 +214,64 @@ namespace HangmanGameService
 			OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseBoolean(true);
 		}
 	}
+        public void SendEmail(string email, int code)
+        {
+            MailMessage correo = new MailMessage();
+            correo.From = new MailAddress("hangmangameproject@gmail.com", "HangmanGame", System.Text.Encoding.UTF8);
+            correo.To.Add(email);
+            correo.Subject = "Code";
+            correo.Body = "Your code is: " + code;
+            correo.IsBodyHtml = true;
+            correo.Priority = MailPriority.Normal;
+            SmtpClient smtp = new SmtpClient();
+            smtp.UseDefaultCredentials = false;
+            smtp.Host = "smtp.gmail.com";
+            smtp.Port = 587;
+            smtp.Credentials = new System.Net.NetworkCredential("hangmangameproject@gmail.com", "Martha-Yazminz4");
+            ServicePointManager.ServerCertificateValidationCallback =
+                delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+            smtp.EnableSsl = true;
+            smtp.Send(correo);
+        }
+
+        public void SearchRepeatEmailAccount(string emailEdit, int idAccount)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool repeatEmail = consult.SearchRepeatEmailAccount(emailEdit,idAccount);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(repeatEmail);
+        }
+
+        
+        public void SearchRepeatNickNamePlayer(string nickNameEdit, string nickNameCurrent)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool repeatNickName = consult.SearchRepeatNickNamePlayer(nickNameEdit, nickNameCurrent);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(repeatNickName);
+        }
+
+        public void UpdateEmail(string email, int idAccount)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool updateEmail = consult.UpdateEmail(email, idAccount);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(updateEmail);
+        }
+
+        public void UpdatePlayer(string nickName, ServicePlayer servicePlayerEdit)
+        {
+            Player playerEdit = new Player();
+            playerEdit.namePlayer = servicePlayerEdit.NamePlayer;
+            playerEdit.lastName = servicePlayerEdit.LastName;
+            playerEdit.nickName = servicePlayerEdit.NickName;
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool updatePlayer = consult.UpdatePlayer(nickName, playerEdit);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(updatePlayer);
+        }
+
+        public void DeleteAccountPlayer(string nickName)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool isDeletePlayer = consult.DeleteAccountPlayer(nickName);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(isDeletePlayer);
+        }
+    }
 }
