@@ -10,14 +10,14 @@
 namespace Connection
 {
     using System;
-    using System.Collections.ObjectModel;
+    using System.Collections.Generic;
     
     public partial class Match
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Match()
         {
-            this.Player = new ObservableCollection<Player>();
+            this.Player = new HashSet<Player>();
         }
     
         public int idMatch { get; set; }
@@ -26,6 +26,6 @@ namespace Connection
     
         public virtual Sentence Sentence { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ObservableCollection<Player> Player { get; set; }
+        public virtual ICollection<Player> Player { get; set; }
     }
 }

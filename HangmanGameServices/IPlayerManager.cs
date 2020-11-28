@@ -25,12 +25,25 @@ namespace HangmanGameService
         [OperationContract]
         void SearchEmailPlayer(string email);
 
+        [OperationContract]
+        void SearchRepeatEmailAccount(string emailEdit, int idAccount);
+
+        [OperationContract]
+        void SearchRepeatNickNamePlayer(string nickNameEdit, string nickNameCurrent);
+
+        [OperationContract]
+        void UpdateEmail(string email, int idAccount);
+
+        [OperationContract]
+        void UpdatePlayer(string nickName, ServicePlayer servicePlayerEdit);
+
+        [OperationContract]
+        void DeleteAccountPlayer(string nickName);
     }
 
     [ServiceContract]
     interface IPlayerCallback
     {
-
         [OperationContract]
         void PlayerResponseBoolean(bool response);
     }

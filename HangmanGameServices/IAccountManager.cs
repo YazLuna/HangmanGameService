@@ -18,9 +18,9 @@ namespace HangmanGameService
     {
 
         [OperationContract]
-        void AccountResponseAccount(ServiceAccount account);
+        void AccountResponseAccount(ServiceAccount serviceAccount);
 
         [OperationContract]
-        void AccountResponsePlayer(ServicePlayer player);
+        void AccountResponsePlayer(ServicePlayer servicePlayer);
     }
 }

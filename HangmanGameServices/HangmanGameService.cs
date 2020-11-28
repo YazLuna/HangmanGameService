@@ -34,6 +34,7 @@ namespace HangmanGameService
             Connection.QueryDB consult = new Connection.QueryDB();
             Account account= consult.SearchAccount(email);
             ServiceAccount serviceAccount = new ServiceAccount();
+            serviceAccount.IdAccount = account.idAccount;
             serviceAccount.NickName = account.nickName;
             serviceAccount.Email = account.email;
             serviceAccount.PasswordAccount = account.passwordAccount;
@@ -54,7 +55,6 @@ namespace HangmanGameService
         }
 
     }
-
     public partial class HangmanGameService : IPlayerManager
     {
         Connection.QueryDB consult = new Connection.QueryDB();
@@ -98,8 +98,8 @@ namespace HangmanGameService
         public void SearchNickNamePlayer(string nickName)
         {
             Connection.QueryDB consult = new Connection.QueryDB();
-            bool isValidnickName = consult.SearchNicknamePlayer(nickName);
-            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(isValidnickName);
+            bool searchNickName = consult.SearchNicknamePlayer(nickName);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(searchNickName);
         }
 
         public void SendEmail(string email, int code)
@@ -120,6 +120,46 @@ namespace HangmanGameService
                 delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
             smtp.EnableSsl = true;
             smtp.Send(correo);
+        }
+
+        public void SearchRepeatEmailAccount(string emailEdit, int idAccount)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool repeatEmail = consult.SearchRepeatEmailAccount(emailEdit,idAccount);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(repeatEmail);
+        }
+
+        
+        public void SearchRepeatNickNamePlayer(string nickNameEdit, string nickNameCurrent)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool repeatNickName = consult.SearchRepeatNickNamePlayer(nickNameEdit, nickNameCurrent);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(repeatNickName);
+        }
+
+        public void UpdateEmail(string email, int idAccount)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool updateEmail = consult.UpdateEmail(email, idAccount);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(updateEmail);
+        }
+
+        public void UpdatePlayer(string nickName, ServicePlayer servicePlayerEdit)
+        {
+            Player playerEdit = new Player();
+            playerEdit.namePlayer = servicePlayerEdit.NamePlayer;
+            playerEdit.lastName = servicePlayerEdit.LastName;
+            playerEdit.nickName = servicePlayerEdit.NickName;
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool updatePlayer = consult.UpdatePlayer(nickName, playerEdit);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(updatePlayer);
+        }
+
+        public void DeleteAccountPlayer(string nickName)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            bool isDeletePlayer = consult.DeleteAccountPlayer(nickName);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(isDeletePlayer);
         }
     }
 }

@@ -10,16 +10,16 @@
 namespace Connection
 {
     using System;
-    using System.Collections.ObjectModel;
+    using System.Collections.Generic;
     
     public partial class Player
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Player()
         {
-            this.Account = new ObservableCollection<Account>();
-            this.ReportMisConduct = new ObservableCollection<ReportMisConduct>();
-            this.Match = new ObservableCollection<Match>();
+            this.Account = new HashSet<Account>();
+            this.ReportMisConduct = new HashSet<ReportMisConduct>();
+            this.Match = new HashSet<Match>();
         }
     
         public string nickName { get; set; }
@@ -29,10 +29,10 @@ namespace Connection
         public string statusPlayer { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ObservableCollection<Account> Account { get; set; }
+        public virtual ICollection<Account> Account { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ObservableCollection<ReportMisConduct> ReportMisConduct { get; set; }
+        public virtual ICollection<ReportMisConduct> ReportMisConduct { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ObservableCollection<Match> Match { get; set; }
+        public virtual ICollection<Match> Match { get; set; }
     }
 }
