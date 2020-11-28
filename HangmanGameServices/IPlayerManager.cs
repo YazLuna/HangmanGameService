@@ -1,4 +1,5 @@
 ﻿using HangmanGameService;
+using System.Collections.Generic;
 using System.ServiceModel;
 
 
@@ -20,7 +21,7 @@ namespace HangmanGameService
         void SendEmail(string email, int code);
 
         [OperationContract]
-        void ChangePassword(string email, string password);
+        void ChangePassword(string email, string newPassword);
 
         [OperationContract]
         void SearchEmailPlayer(string email);
@@ -47,4 +48,5 @@ namespace HangmanGameService
         [OperationContract]
         void PlayerResponseBoolean(bool response);
     }
+
 }
