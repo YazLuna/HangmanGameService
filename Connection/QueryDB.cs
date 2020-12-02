@@ -15,7 +15,13 @@ namespace Connection
 					(accountSearch => accountSearch.email == email && accountSearch.passwordAccount == password);
 				if (account != null)
 				{
-					log = true;
+					Player player = new Player();
+					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == account.nickName &&
+					playerSearch.statusPlayer == "Active");
+					if (player != null)
+                    {
+						log = true;
+					}
 				}
 			}
 			return log;
@@ -57,7 +63,13 @@ namespace Connection
 				account = db.Account.SingleOrDefault(accountSearch => accountSearch.email == email);
 				if (account != null)
 				{
-					search = true;
+					Player player = new Player();
+					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == account.nickName &&
+					playerSearch.statusPlayer == "Active");
+					if (player != null)
+                    {
+						search = true;
+					}
 				}
 			}
 			return search;
