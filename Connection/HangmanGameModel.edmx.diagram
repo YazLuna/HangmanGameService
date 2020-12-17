@@ -4,11 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="62e09133fac946948a30e0cae14c58e4" Name="Diagram1">
-        <EntityTypeShape EntityType="HangmanGameModel.Account" Width="1.5" PointX="3" PointY="4.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="HangmanGameModel.Match" Width="1.5" PointX="6" PointY="5.75" IsExpanded="true" />
+      <Diagram DiagramId="e70e7d4286c148c8894f6e508830ea4b" Name="Diagram1">
+        <EntityTypeShape EntityType="HangmanGameModel.Account" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="HangmanGameModel.Match" Width="1.5" PointX="6" PointY="5.875" IsExpanded="true" />
         <EntityTypeShape EntityType="HangmanGameModel.Player" Width="1.5" PointX="0.75" PointY="5.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="HangmanGameModel.ReportMisConduct" Width="1.5" PointX="3" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HangmanGameModel.ReportMisConduct" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
         <EntityTypeShape EntityType="HangmanGameModel.Sentence" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="HangmanGameModel.FK_dbo_Account_1" ManuallyRouted="false" />
         <AssociationConnector Association="HangmanGameModel.FK_dbo_Match_1" ManuallyRouted="false" />

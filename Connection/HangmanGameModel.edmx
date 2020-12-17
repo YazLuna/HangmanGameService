@@ -58,8 +58,9 @@
           </Key>
           <Property Name="idSentence" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="scoreSentence" Type="int" Nullable="false" />
-          <Property Name="sentence" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="sentenceWord" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="hint" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="language" Type="varchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <Association Name="FK_dbo_Account_1">
           <End Role="Player" Type="Self.Player" Multiplicity="1" />
@@ -208,8 +209,9 @@
           </Key>
           <Property Name="idSentence" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="scoreSentence" Type="Int32" Nullable="false" />
-          <Property Name="sentence1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sentenceWord" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="hint" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="language" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Match" Relationship="Self.FK_dbo_Match_1" FromRole="Sentence" ToRole="Match" />
         </EntityType>
         <Association Name="FK_dbo_Account_1">
@@ -331,8 +333,9 @@
               <MappingFragment StoreEntitySet="Sentence">
                 <ScalarProperty Name="idSentence" ColumnName="idSentence" />
                 <ScalarProperty Name="scoreSentence" ColumnName="scoreSentence" />
-                <ScalarProperty Name="sentence1" ColumnName="sentence" />
+                <ScalarProperty Name="sentenceWord" ColumnName="sentenceWord" />
                 <ScalarProperty Name="hint" ColumnName="hint" />
+                <ScalarProperty Name="language" ColumnName="language" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
