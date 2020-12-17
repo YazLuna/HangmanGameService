@@ -30,16 +30,16 @@ namespace HangmanGameService
     {
 
         [OperationContract]
-        void ChatResponseBoolean(bool response);
+        void ChatResponseBoolean(bool responseBoolean);
 
         [OperationContract]
-        void ChatResponse(string response);
+        void ChatResponse(string responseString);
 
         [OperationContract]
-        void ChatResponseList(List<ServicePlayer> response);
+        void ChatResponseList(List<ServicePlayer> responseList);
 
         [OperationContract]
-        void PlayerEntryMessage(List<string> response);
+        void PlayerEntryMessage(List<string> responseListString);
 
     }
 }

@@ -68,10 +68,10 @@
     <Compile Include="IInformationPlayerManager.cs" />
     <Compile Include="IPlayerManager.cs" />
     <Compile Include="IPlayerScoresManager.cs" />
+    <Compile Include="IPlayManager.cs" />
     <Compile Include="ServiceAccount.cs" />
     <Compile Include="ServiceMatch.cs" />
     <Compile Include="ServicePlayer.cs" />
-    <Compile Include="ServicePlayerList.cs" />
     <Compile Include="ServicePlayer_Match.cs" />
     <Compile Include="ServiceReportMisConduct.cs" />
     <Compile Include="ServiceSentence.cs" />
