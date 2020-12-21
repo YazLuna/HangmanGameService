@@ -10,22 +10,23 @@
 namespace Connection
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     
     public partial class Sentence
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Sentence()
         {
-            this.Match = new HashSet<Match>();
+            this.Match = new ObservableCollection<Match>();
         }
     
         public int idSentence { get; set; }
         public int scoreSentence { get; set; }
-        public string sentence1 { get; set; }
+        public string sentenceWord { get; set; }
         public string hint { get; set; }
+        public string language { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Match> Match { get; set; }
+        public virtual ObservableCollection<Match> Match { get; set; }
     }
 }

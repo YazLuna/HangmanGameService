@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Connection
 {
@@ -14,7 +16,13 @@ namespace Connection
 					(accountSearch => accountSearch.email == email && accountSearch.passwordAccount == password);
 				if (account != null)
 				{
-					log = true;
+					Player player = new Player();
+					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == account.nickName &&
+					playerSearch.statusPlayer == "Active");
+					if (player != null)
+                    {
+						log = true;
+					}
 				}
 			}
 			return log;
@@ -56,7 +64,13 @@ namespace Connection
 				account = db.Account.SingleOrDefault(accountSearch => accountSearch.email == email);
 				if (account != null)
 				{
-					search = true;
+					Player player = new Player();
+					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == account.nickName &&
+					playerSearch.statusPlayer == "Active");
+					if (player != null)
+                    {
+						search = true;
+					}
 				}
 			}
 			return search;
@@ -95,6 +109,29 @@ namespace Connection
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickName);
+			}
+			return player;
+		}
+
+		public List<Player> SearchBestScoresPlayer()
+		{
+			List<Player> playersOrder = new List<Player>();
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				List<Player>players = db.Player.Where(player => player.scoreObtained > 0).ToList<Player>();
+				playersOrder = players.OrderBy(score => score.scoreObtained).ToList();
+			}
+			return playersOrder;
+		}
+
+		public Player SearchInformationPlayer(string email)
+		{
+			Player player = new Player();
+
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				Account account = db.Account.SingleOrDefault(playerSearch => playerSearch.email == email);
+				player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == account.nickName);
 			}
 			return player;
 		}
@@ -184,6 +221,41 @@ namespace Connection
 			}
 			return isDeletePlayer;
 		}
+
+		public Sentence SearchSentence(string language)
+		{
+			Sentence sentence = new Sentence();
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				int id = GenerateIdSearch();
+				do
+				{
+					sentence = db.Sentence.SingleOrDefault(sentenceSearch => sentenceSearch.language == language && sentenceSearch.idSentence == id);
+				} while (sentence == null);
+				
+			}
+			return sentence;
+		}
+
+		private int CountRowsSentence()
+		{
+			int count = 0;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				count = db.Sentence.Count();
+			}
+			return count;
+		}
+
+		private int GenerateIdSearch()
+		{
+			Random random = new Random();
+			int code = random.Next(1,CountRowsSentence());
+			return code;
+		}
+
 	}
+
+
 }
 
