@@ -40,6 +40,38 @@ namespace Connection
 			}
 			return registerOk;
 		}
+
+		public int RegisterMatch(Match match)
+		{
+			int idMatch;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				db.Match.Add(match);
+				db.SaveChanges();
+				idMatch = match.idMatch;
+			}
+			return idMatch;
+		}
+		public bool RegisterPlayerMatch(int idMatch, List<Player> players)
+        {
+			bool isRegisterPlayerMatch = false;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				Match match = new Match();
+				match = db.Match.SingleOrDefault(matchSearch => matchSearch.idMatch == idMatch);
+				if (match != null)
+				{
+					foreach(Player player in players)
+                    {
+						Player playerMatch = db.Player.Find(player.nickName);
+						match.Player.Add(playerMatch);
+					}
+					db.SaveChanges();
+					isRegisterPlayerMatch = true;
+				}
+			}
+			return isRegisterPlayerMatch;
+        }
 		public bool SearchNicknamePlayer(string nickName)
 		{
 			bool searchNickname = false;
@@ -54,7 +86,6 @@ namespace Connection
 			}
 			return searchNickname;
 		}
-
 		public bool SearchEmailPlayer(string email)
 		{
 			bool search = false;
@@ -75,7 +106,6 @@ namespace Connection
 			}
 			return search;
 		}
-
 		public bool ChangePassword(string email, string newPassword)
 		{
 			bool update = false;
@@ -92,7 +122,6 @@ namespace Connection
 			}
 			return update;
 		}
-
 		public Account SearchAccount(string email)
 		{
 			Account account = new Account();
@@ -102,7 +131,6 @@ namespace Connection
 			}
 			return account;
 		}
-
 		public Player SearchPlayer(string nickName)
 		{
 			Player player = new Player();
@@ -123,11 +151,9 @@ namespace Connection
 			}
 			return playersOrder;
 		}
-
 		public Player SearchInformationPlayer(string email)
 		{
 			Player player = new Player();
-
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				Account account = db.Account.SingleOrDefault(playerSearch => playerSearch.email == email);
@@ -163,7 +189,6 @@ namespace Connection
 			}
 			return search;
 		}
-
 		public bool UpdateEmail(string email, int idAccount)
 		{
 			bool updateEmail = false;
@@ -180,7 +205,6 @@ namespace Connection
 			}
 			return updateEmail;
 		}
-
 		public bool UpdatePlayer(string nickName, Player playerEdit)
 		{
 			bool updatePlayer = false;
@@ -221,8 +245,7 @@ namespace Connection
 			}
 			return isDeletePlayer;
 		}
-
-		public Sentence SearchSentence(string language)
+		public Sentence SearchSentence()
 		{
 			Sentence sentence = new Sentence();
 			using (HangmanGameContext db = new HangmanGameContext())
@@ -230,13 +253,11 @@ namespace Connection
 				int id = GenerateIdSearch();
 				do
 				{
-					sentence = db.Sentence.SingleOrDefault(sentenceSearch => sentenceSearch.language == language && sentenceSearch.idSentence == id);
+					sentence = db.Sentence.SingleOrDefault(sentenceSearch => sentenceSearch.idSentence == id);
 				} while (sentence == null);
-				
 			}
 			return sentence;
 		}
-
 		private int CountRowsSentence()
 		{
 			int count = 0;
@@ -246,16 +267,49 @@ namespace Connection
 			}
 			return count;
 		}
-
 		private int GenerateIdSearch()
 		{
 			Random random = new Random();
 			int code = random.Next(1,CountRowsSentence());
 			return code;
 		}
-
+		public bool RegisterReport(ReportMisConduct report)
+		{
+			bool isReport = false;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				db.ReportMisConduct.Add(report);
+				db.SaveChanges();
+				isReport = true;
+			}
+			return isReport;
+		}
+		public List<ReportMisConduct> SearchReport(String nickname)
+        {
+			List<ReportMisConduct> reportMisConducts = new List<ReportMisConduct>();
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				List<ReportMisConduct> reports = db.ReportMisConduct.Where(reportMisConductSearch => reportMisConductSearch.idReportedPlayer == nickname).ToList<ReportMisConduct>();
+				reportMisConducts = reports.OrderBy(player => player.dateHour).ToList();
+			}
+			return reportMisConducts;
+		}
+		public bool ReportAccountPlayer(string nickName)
+		{
+			bool isReportAccountPlayer = false;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				Player player = new Player();
+				player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickName);
+				if (player != null)
+				{
+					player.statusPlayer = "Report";
+					db.SaveChanges();
+					isReportAccountPlayer = true;
+				}
+			}
+			return isReportAccountPlayer;
+		}
 	}
-
-
 }
 

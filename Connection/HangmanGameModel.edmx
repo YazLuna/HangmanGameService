@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="HangmanGameModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="HangmanGameModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="idAccount" />
@@ -58,9 +58,11 @@
           </Key>
           <Property Name="idSentence" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="scoreSentence" Type="int" Nullable="false" />
-          <Property Name="sentenceWord" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="hint" Type="varchar" MaxLength="150" Nullable="false" />
-          <Property Name="language" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="sentenceWordSpanish" Type="varchar" MaxLength="100" />
+          <Property Name="hintSpanish" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="sentenceWordEnglish" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="hintEnglish" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="category" Type="varchar" MaxLength="4" Nullable="false" />
         </EntityType>
         <Association Name="FK_dbo_Account_1">
           <End Role="Player" Type="Self.Player" Multiplicity="1" />
@@ -111,9 +113,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_dbo_ReportMisConduct_1">
-          <End Role="Player" Type="Self.Player" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Player" Type="Self.Player" Multiplicity="1" />
           <End Role="ReportMisConduct" Type="Self.ReportMisConduct" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Player">
@@ -152,21 +152,43 @@
             <End Role="ReportMisConduct" EntitySet="ReportMisConduct" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="HangmanGameModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="HangmanGameContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Account" EntityType="HangmanGameModel.Account" />
+          <EntitySet Name="Match" EntityType="HangmanGameModel.Match" />
+          <EntitySet Name="Player" EntityType="HangmanGameModel.Player" />
+          <EntitySet Name="ReportMisConduct" EntityType="HangmanGameModel.ReportMisConduct" />
+          <EntitySet Name="Sentence" EntityType="HangmanGameModel.Sentence" />
+          <AssociationSet Name="FK_dbo_Account_1" Association="HangmanGameModel.FK_dbo_Account_1">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="Account" EntitySet="Account" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Match_1" Association="HangmanGameModel.FK_dbo_Match_1">
+            <End Role="Sentence" EntitySet="Sentence" />
+            <End Role="Match" EntitySet="Match" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_ReportMisConduct_1" Association="HangmanGameModel.FK_dbo_ReportMisConduct_1">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="ReportMisConduct" EntitySet="ReportMisConduct" />
+          </AssociationSet>
+          <AssociationSet Name="Player_Match" Association="HangmanGameModel.Player_Match">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="Match" EntitySet="Match" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="idAccount" />
           </Key>
           <Property Name="idAccount" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="passwordAccount" Type="String" MaxLength="160" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="email" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="passwordAccount" Type="String" Nullable="false" MaxLength="160" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="confirmationCode" Type="Int32" Nullable="false" />
-          <Property Name="nickName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Player" Relationship="Self.FK_dbo_Account_1" FromRole="Account" ToRole="Player" />
+          <Property Name="nickName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Player" Relationship="HangmanGameModel.FK_dbo_Account_1" FromRole="Account" ToRole="Player" />
         </EntityType>
         <EntityType Name="Match">
           <Key>
@@ -175,33 +197,33 @@
           <Property Name="idMatch" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="dateHour" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="idSentence" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Sentence" Relationship="Self.FK_dbo_Match_1" FromRole="Match" ToRole="Sentence" />
-          <NavigationProperty Name="Player" Relationship="Self.Player_Match" FromRole="Match" ToRole="Player" />
+          <NavigationProperty Name="Sentence" Relationship="HangmanGameModel.FK_dbo_Match_1" FromRole="Match" ToRole="Sentence" />
+          <NavigationProperty Name="Player" Relationship="HangmanGameModel.Player_Match" FromRole="Match" ToRole="Player" />
         </EntityType>
         <EntityType Name="Player">
           <Key>
             <PropertyRef Name="nickName" />
           </Key>
-          <Property Name="nickName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="namePlayer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="lastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nickName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="namePlayer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="lastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="scoreObtained" Type="Int32" />
-          <Property Name="statusPlayer" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Account" Relationship="Self.FK_dbo_Account_1" FromRole="Player" ToRole="Account" />
-          <NavigationProperty Name="ReportMisConduct" Relationship="Self.FK_dbo_ReportMisConduct_1" FromRole="Player" ToRole="ReportMisConduct" />
-          <NavigationProperty Name="Match" Relationship="Self.Player_Match" FromRole="Player" ToRole="Match" />
+          <Property Name="statusPlayer" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Account" Relationship="HangmanGameModel.FK_dbo_Account_1" FromRole="Player" ToRole="Account" />
+          <NavigationProperty Name="ReportMisConduct" Relationship="HangmanGameModel.FK_dbo_ReportMisConduct_1" FromRole="Player" ToRole="ReportMisConduct" />
+          <NavigationProperty Name="Match" Relationship="HangmanGameModel.Player_Match" FromRole="Player" ToRole="Match" />
         </EntityType>
         <EntityType Name="ReportMisConduct">
           <Key>
             <PropertyRef Name="idReportMisConduct" />
           </Key>
           <Property Name="idReportMisConduct" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="typeReport" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="typeReport" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="dateHour" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="additionalContext" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="idReportedPlayer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="idReportingPlayer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Player" Relationship="Self.FK_dbo_ReportMisConduct_1" FromRole="ReportMisConduct" ToRole="Player" />
+          <Property Name="idReportedPlayer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="idReportingPlayer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Player" Relationship="HangmanGameModel.FK_dbo_ReportMisConduct_1" FromRole="ReportMisConduct" ToRole="Player" />
         </EntityType>
         <EntityType Name="Sentence">
           <Key>
@@ -209,14 +231,16 @@
           </Key>
           <Property Name="idSentence" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="scoreSentence" Type="Int32" Nullable="false" />
-          <Property Name="sentenceWord" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="hint" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="language" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Match" Relationship="Self.FK_dbo_Match_1" FromRole="Sentence" ToRole="Match" />
+          <Property Name="sentenceWordSpanish" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="hintSpanish" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="sentenceWordEnglish" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="hintEnglish" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Match" Relationship="HangmanGameModel.FK_dbo_Match_1" FromRole="Sentence" ToRole="Match" />
+          <Property Name="category" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_dbo_Account_1">
-          <End Role="Player" Type="Self.Player" Multiplicity="1" />
-          <End Role="Account" Type="Self.Account" Multiplicity="*" />
+          <End Type="HangmanGameModel.Player" Role="Player" Multiplicity="1" />
+          <End Type="HangmanGameModel.Account" Role="Account" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Player">
               <PropertyRef Name="nickName" />
@@ -227,8 +251,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_dbo_Match_1">
-          <End Role="Sentence" Type="Self.Sentence" Multiplicity="1" />
-          <End Role="Match" Type="Self.Match" Multiplicity="*" />
+          <End Type="HangmanGameModel.Sentence" Role="Sentence" Multiplicity="1" />
+          <End Type="HangmanGameModel.Match" Role="Match" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Sentence">
               <PropertyRef Name="idSentence" />
@@ -239,10 +263,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_dbo_ReportMisConduct_1">
-          <End Role="Player" Type="Self.Player" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="ReportMisConduct" Type="Self.ReportMisConduct" Multiplicity="*" />
+          <End Type="HangmanGameModel.Player" Role="Player" Multiplicity="1" />
+          <End Type="HangmanGameModel.ReportMisConduct" Role="ReportMisConduct" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Player">
               <PropertyRef Name="nickName" />
@@ -253,33 +275,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Player_Match">
-          <End Role="Player" Type="Self.Player" Multiplicity="*" />
-          <End Role="Match" Type="Self.Match" Multiplicity="*" />
+          <End Type="HangmanGameModel.Player" Role="Player" Multiplicity="*" />
+          <End Type="HangmanGameModel.Match" Role="Match" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="HangmanGameContext" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Account" EntityType="Self.Account" />
-          <EntitySet Name="Match" EntityType="Self.Match" />
-          <EntitySet Name="Player" EntityType="Self.Player" />
-          <EntitySet Name="ReportMisConduct" EntityType="Self.ReportMisConduct" />
-          <EntitySet Name="Sentence" EntityType="Self.Sentence" />
-          <AssociationSet Name="FK_dbo_Account_1" Association="Self.FK_dbo_Account_1">
-            <End Role="Player" EntitySet="Player" />
-            <End Role="Account" EntitySet="Account" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_Match_1" Association="Self.FK_dbo_Match_1">
-            <End Role="Sentence" EntitySet="Sentence" />
-            <End Role="Match" EntitySet="Match" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_ReportMisConduct_1" Association="Self.FK_dbo_ReportMisConduct_1">
-            <End Role="Player" EntitySet="Player" />
-            <End Role="ReportMisConduct" EntitySet="ReportMisConduct" />
-          </AssociationSet>
-          <AssociationSet Name="Player_Match" Association="Self.Player_Match">
-            <End Role="Player" EntitySet="Player" />
-            <End Role="Match" EntitySet="Match" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -288,63 +287,65 @@
           <EntitySetMapping Name="Account">
             <EntityTypeMapping TypeName="HangmanGameModel.Account">
               <MappingFragment StoreEntitySet="Account">
-                <ScalarProperty Name="idAccount" ColumnName="idAccount" />
-                <ScalarProperty Name="passwordAccount" ColumnName="passwordAccount" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="confirmationCode" ColumnName="confirmationCode" />
                 <ScalarProperty Name="nickName" ColumnName="nickName" />
+                <ScalarProperty Name="confirmationCode" ColumnName="confirmationCode" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="passwordAccount" ColumnName="passwordAccount" />
+                <ScalarProperty Name="idAccount" ColumnName="idAccount" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Match">
             <EntityTypeMapping TypeName="HangmanGameModel.Match">
               <MappingFragment StoreEntitySet="Match">
-                <ScalarProperty Name="idMatch" ColumnName="idMatch" />
-                <ScalarProperty Name="dateHour" ColumnName="dateHour" />
                 <ScalarProperty Name="idSentence" ColumnName="idSentence" />
+                <ScalarProperty Name="dateHour" ColumnName="dateHour" />
+                <ScalarProperty Name="idMatch" ColumnName="idMatch" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Player">
             <EntityTypeMapping TypeName="HangmanGameModel.Player">
               <MappingFragment StoreEntitySet="Player">
-                <ScalarProperty Name="nickName" ColumnName="nickName" />
-                <ScalarProperty Name="namePlayer" ColumnName="namePlayer" />
-                <ScalarProperty Name="lastName" ColumnName="lastName" />
-                <ScalarProperty Name="scoreObtained" ColumnName="scoreObtained" />
                 <ScalarProperty Name="statusPlayer" ColumnName="statusPlayer" />
+                <ScalarProperty Name="scoreObtained" ColumnName="scoreObtained" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="namePlayer" ColumnName="namePlayer" />
+                <ScalarProperty Name="nickName" ColumnName="nickName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ReportMisConduct">
             <EntityTypeMapping TypeName="HangmanGameModel.ReportMisConduct">
               <MappingFragment StoreEntitySet="ReportMisConduct">
-                <ScalarProperty Name="idReportMisConduct" ColumnName="idReportMisConduct" />
-                <ScalarProperty Name="typeReport" ColumnName="typeReport" />
-                <ScalarProperty Name="dateHour" ColumnName="dateHour" />
-                <ScalarProperty Name="additionalContext" ColumnName="additionalContext" />
-                <ScalarProperty Name="idReportedPlayer" ColumnName="idReportedPlayer" />
                 <ScalarProperty Name="idReportingPlayer" ColumnName="idReportingPlayer" />
+                <ScalarProperty Name="idReportedPlayer" ColumnName="idReportedPlayer" />
+                <ScalarProperty Name="additionalContext" ColumnName="additionalContext" />
+                <ScalarProperty Name="dateHour" ColumnName="dateHour" />
+                <ScalarProperty Name="typeReport" ColumnName="typeReport" />
+                <ScalarProperty Name="idReportMisConduct" ColumnName="idReportMisConduct" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Sentence">
             <EntityTypeMapping TypeName="HangmanGameModel.Sentence">
               <MappingFragment StoreEntitySet="Sentence">
-                <ScalarProperty Name="idSentence" ColumnName="idSentence" />
+                <ScalarProperty Name="category" ColumnName="category" />
+                <ScalarProperty Name="hintEnglish" ColumnName="hintEnglish" />
+                <ScalarProperty Name="sentenceWordEnglish" ColumnName="sentenceWordEnglish" />
+                <ScalarProperty Name="hintSpanish" ColumnName="hintSpanish" />
+                <ScalarProperty Name="sentenceWordSpanish" ColumnName="sentenceWordSpanish" />
                 <ScalarProperty Name="scoreSentence" ColumnName="scoreSentence" />
-                <ScalarProperty Name="sentenceWord" ColumnName="sentenceWord" />
-                <ScalarProperty Name="hint" ColumnName="hint" />
-                <ScalarProperty Name="language" ColumnName="language" />
+                <ScalarProperty Name="idSentence" ColumnName="idSentence" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <AssociationSetMapping Name="Player_Match" TypeName="HangmanGameModel.Player_Match" StoreEntitySet="Player_Match">
-            <EndProperty Name="Player">
-              <ScalarProperty Name="nickName" ColumnName="nickName" />
-            </EndProperty>
             <EndProperty Name="Match">
               <ScalarProperty Name="idMatch" ColumnName="idMatch" />
+            </EndProperty>
+            <EndProperty Name="Player">
+              <ScalarProperty Name="nickName" ColumnName="nickName" />
             </EndProperty>
           </AssociationSetMapping>
         </EntityContainerMapping>

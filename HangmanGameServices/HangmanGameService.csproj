@@ -66,9 +66,10 @@
     <Compile Include="IChatManager.cs" />
     <Compile Include="IHangmanGameService.cs" />
     <Compile Include="IInformationPlayerManager.cs" />
+    <Compile Include="IPlayConnect.cs" />
     <Compile Include="IPlayerManager.cs" />
     <Compile Include="IPlayerScoresManager.cs" />
-    <Compile Include="IPlayManager.cs" />
+    <Compile Include="IReportManager.cs" />
     <Compile Include="ServiceAccount.cs" />
     <Compile Include="ServiceMatch.cs" />
     <Compile Include="ServicePlayer.cs" />

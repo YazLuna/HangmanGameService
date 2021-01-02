@@ -12,13 +12,18 @@ namespace HangmanGameService
 		public int ScoreSentence { get; set; }
 
 		[DataMember]
-		public string SentenceWord { get; set; }
+		public string SentenceWordSpanish { get; set; }
 
 		[DataMember]
-		public string Hint { get; set; }
+		public string HintSpanish { get; set; }
 
 		[DataMember]
-		public string Language { get; set; }
+		public string SentenceWordEnglish { get; set; }
 
+		[DataMember]
+		public string HintEnglish { get; set; }
+
+		[DataMember]
+		public string Category { get; set; }
 	}
 }
