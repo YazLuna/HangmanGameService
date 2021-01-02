@@ -9,10 +9,11 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Collections.Generic;
+using System;
 
 namespace HangmanGameService
 {
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, InstanceContextMode = InstanceContextMode.Single)]
     public partial class HangmanGameService : IHangmanGameService
     {
         public void SendOperation()
@@ -197,16 +198,36 @@ namespace HangmanGameService
     public partial class HangmanGameService : IChatManager
     {
         private Dictionary<string, List<string>> incomingMessages = new Dictionary<string, List<string>>();
-        private List<ServicePlayer> PlayersConnect = new List<ServicePlayer>();
+        private Dictionary<string, IChatCallback> playersCallback = new Dictionary<string, IChatCallback>();
+        private List<ServicePlayer> playersConnect = new List<ServicePlayer>();
+       
         public void ClientConnect(string nickname)
         {
-            ServicePlayer servicePlayer = new ServicePlayer();
-            servicePlayer.NickName = nickname;
-            PlayersConnect.Add(servicePlayer);
-            incomingMessages.Add(nickname, new List<string>() {
-                "Welcome to HangmanGame chat"});
+            if (playersConnect.Count == 0)
+            {
+                ServicePlayer servicePlayer = new ServicePlayer();
+                servicePlayer.NickName = nickname;
+                this.playersConnect.Add(servicePlayer);
+                incomingMessages.Add(nickname, new List<string>() { "Welcome to HangmanGame chat" });
+                playersCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IChatCallback>());
+            }
+            else
+            {
+                foreach (var players in this.playersConnect)
+                {
+                    if (!nickname.Equals(players.NickName))
+                    {
+                        ServicePlayer servicePlayer = new ServicePlayer();
+                        servicePlayer.NickName = nickname;
+                        this.playersConnect.Add(servicePlayer);
+                        incomingMessages.Add(nickname, new List<string>() { "Welcome to HangmanGame chat" });
+                        playersCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IChatCallback>());
+
+                    }
+                }
+            }
+            
             OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseBoolean(true);
-            //guardar el channel
         }
 
         public void GetNewMessage(string nickname)
@@ -218,27 +239,54 @@ namespace HangmanGameService
 
         public void SendNewMessage(string newMessage, string nickname)
         {
-            foreach (var players in this.PlayersConnect)
+            var connection = OperationContext.Current.GetCallbackChannel<IChatCallback>();
+            foreach (var players in this.playersConnect)
             {
                 if (!nickname.Equals(players.NickName))
                 {
-                    incomingMessages[players.NickName].Add(newMessage);
+                    incomingMessages[players.NickName].Add(newMessage);                    
                 }
             }
-            //para mandar a todos los jugadores conectados los mensaje o en el getNewMessages
+
+            foreach (KeyValuePair<string, IChatCallback> result in playersCallback)
+            {
+                if (!connection.Equals(result.Value))
+                {
+                    List<string> myNewMessages = incomingMessages[nickname];
+                    result.Value.PlayerEntryMessage(myNewMessages);
+                }
+            }
             OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseBoolean(true);
         }
 
         public void GetAllPlayers()
         {
-            OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseList(PlayersConnect);
+            OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseList(this.playersConnect);
         }
 
         public void RemoveUser(string nickname)
         {
-            this.PlayersConnect.RemoveAll(player => player.NickName == nickname);
+            this.playersConnect.RemoveAll(player => player.NickName == nickname);
             OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseBoolean(true);
         }
+    }
+
+    public partial class HangmanGameService : IPlayManager
+    {
+        public void SearchSentence(string lenguage)
+        {
+            Connection.QueryDB consult = new Connection.QueryDB();
+            ServiceSentence serviceSentence = new ServiceSentence();
+            Sentence sentence = new Sentence();
+            sentence = consult.SearchSentence(lenguage);
+            serviceSentence.Hint = sentence.hint;
+            serviceSentence.ScoreSentence = sentence.scoreSentence;
+            serviceSentence.SentenceWord = sentence.sentenceWord;
+            OperationContext.Current.GetCallbackChannel<IPlayCallback>().SentenceFound(serviceSentence);
+        }
+
+       
+
     }
 
 }

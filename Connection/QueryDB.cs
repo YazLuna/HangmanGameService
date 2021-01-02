@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Connection
@@ -220,6 +221,41 @@ namespace Connection
 			}
 			return isDeletePlayer;
 		}
+
+		public Sentence SearchSentence(string language)
+		{
+			Sentence sentence = new Sentence();
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				int id = GenerateIdSearch();
+				do
+				{
+					sentence = db.Sentence.SingleOrDefault(sentenceSearch => sentenceSearch.language == language && sentenceSearch.idSentence == id);
+				} while (sentence == null);
+				
+			}
+			return sentence;
+		}
+
+		private int CountRowsSentence()
+		{
+			int count = 0;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				count = db.Sentence.Count();
+			}
+			return count;
+		}
+
+		private int GenerateIdSearch()
+		{
+			Random random = new Random();
+			int code = random.Next(1,CountRowsSentence());
+			return code;
+		}
+
 	}
+
+
 }
 
