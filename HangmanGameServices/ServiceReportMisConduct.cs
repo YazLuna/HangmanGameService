@@ -28,7 +28,5 @@ namespace HangmanGameService
         [DataMember]
         public string IdReportingPlayer { get; set; }
 
-        [DataMember]
-        public virtual ServicePlayer ServicePlayer { get; set; }
     }
 }
