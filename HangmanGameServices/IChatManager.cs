@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace HangmanGameService
@@ -12,10 +10,10 @@ namespace HangmanGameService
         void ClientConnect(string nickname);
 
         [OperationContract]
-        void GetNewMessage(string nickname);
+        void GetNewMessages(string nickname);
 
         [OperationContract]
-        void SendNewMessage(string newMessage, string nickname);
+        void SendNewMessages(string newMessage, string nickname);
 
         [OperationContract]
         void GetAllPlayers();
@@ -24,11 +22,9 @@ namespace HangmanGameService
         void RemoveUser(string nickname);
     }
 
-
     [ServiceContract]
     interface IChatCallback
     {
-
         [OperationContract]
         void ChatResponseBoolean(bool responseBoolean);
 
@@ -39,7 +35,8 @@ namespace HangmanGameService
         void ChatResponseList(List<ServicePlayer> responseList);
 
         [OperationContract]
-        void PlayerEntryMessage(List<string> responseListString);
+        void PlayerEntryMessages(List<string> responseListString);
+
 
     }
 }
