@@ -377,10 +377,18 @@ namespace Connection
 			Sentence sentence = new Sentence();
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
-				do
+				try
+                {
+					do
+					{
+						sentence = db.Sentence.OrderBy(r => Guid.NewGuid()).Take(1).FirstOrDefault();
+					} while (sentence == null);
+				} 
+				catch (DbEntityValidationException exception)
 				{
-					sentence = db.Sentence.OrderBy(r => Guid.NewGuid()).Take(1).FirstOrDefault();
-				} while (sentence == null);
+					TelegramBot.SendToTelegram(exception);
+					LogException.Log(this, exception);
+				}
 			}
 			return sentence;
 		}
