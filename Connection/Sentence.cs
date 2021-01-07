@@ -22,11 +22,11 @@ namespace Connection
     
         public int idSentence { get; set; }
         public int scoreSentence { get; set; }
-        public string sentenceWordSpanish { get; set; }
-        public string hintSpanish { get; set; }
         public string sentenceWordEnglish { get; set; }
-        public string hintEnglish { get; set; }
+        public string hintSpanish { get; set; }
+        public string sentenceWordSpanish { get; set; }
         public string category { get; set; }
+        public string hintEnglish { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ObservableCollection<Match> Match { get; set; }

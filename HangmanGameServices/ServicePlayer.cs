@@ -27,6 +27,9 @@ namespace HangmanGameService
         public string StatusPlayer { get; set; }
 
         [DataMember]
+        public int Position { get; set; }
+
+        [DataMember]
         public virtual ObservableCollection<ServiceReportMisConduct> ServiceReportMisConduct { get; set; }
     }
 }

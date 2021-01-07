@@ -378,13 +378,12 @@ namespace Connection
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				try
-				{
-					int id = GenerateIdSearch();
+                {
 					do
 					{
-						sentence = db.Sentence.SingleOrDefault(sentenceSearch => sentenceSearch.idSentence == id);
+						sentence = db.Sentence.OrderBy(r => Guid.NewGuid()).Take(1).FirstOrDefault();
 					} while (sentence == null);
-				}
+				} 
 				catch (DbEntityValidationException exception)
 				{
 					TelegramBot.SendToTelegram(exception);
@@ -393,29 +392,7 @@ namespace Connection
 			}
 			return sentence;
 		}
-		private int CountRowsSentence()
-		{
-			int count = 0;
-			using (HangmanGameContext db = new HangmanGameContext())
-			{
-				try
-				{
-					count = db.Sentence.Count();
-				}
-				catch (DbEntityValidationException exception)
-				{
-					TelegramBot.SendToTelegram(exception);
-					LogException.Log(this, exception);
-				}
-			}
-			return count;
-		}
-		private int GenerateIdSearch()
-		{
-			Random random = new Random();
-			int code = random.Next(1,CountRowsSentence());
-			return code;
-		}
+		
 		public bool RegisterReport(ReportMisConduct report)
 		{
 			bool isReport = false;
@@ -476,6 +453,20 @@ namespace Connection
 				}
 			}
 			return isReportAccountPlayer;
+		}
+
+		public bool SavePoints(string nickname, int points)
+		{
+			bool save = false;
+			Player player = new Player();
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
+				player.scoreObtained += points;
+				db.SaveChanges();
+				save = true;
+			}
+			return save;
 		}
 	}
 }

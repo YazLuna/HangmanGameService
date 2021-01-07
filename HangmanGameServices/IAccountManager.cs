@@ -1,5 +1,4 @@
-﻿using HangmanGameService;
-using System.ServiceModel;
+﻿using System.ServiceModel;
 
 namespace HangmanGameService
 {
@@ -16,7 +15,6 @@ namespace HangmanGameService
     [ServiceContract]
     interface IAccountCallback
     {
-
         [OperationContract]
         void AccountResponseAccount(ServiceAccount serviceAccount);
 

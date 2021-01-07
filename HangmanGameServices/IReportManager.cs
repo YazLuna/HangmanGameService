@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace HangmanGameService
@@ -24,5 +22,4 @@ namespace HangmanGameService
         [OperationContract]
         void ResponseReportList(List<ServiceReportMisConduct> reportMisConducts);
     }
-
 }
