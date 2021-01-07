@@ -1,7 +1,4 @@
-﻿using HangmanGameService;
-using System.Collections.Generic;
-using System.ServiceModel;
-
+﻿using System.ServiceModel;
 
 namespace HangmanGameService
 {
@@ -48,5 +45,4 @@ namespace HangmanGameService
         [OperationContract]
         void PlayerResponseBoolean(bool response);
     }
-
 }

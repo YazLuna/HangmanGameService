@@ -1,0 +1,6 @@
+projectKey=HangmanGameService
+serverUrl=http://localhost:9000
+serverVersion=6.7.0.33306
+dashboardUrl=http://localhost:9000/dashboard/index/HangmanGameService
+ceTaskId=AWRtsFGKNzoOyWxuHIBA
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AWRtsFGKNzoOyWxuHIBA

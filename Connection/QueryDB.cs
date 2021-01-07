@@ -147,7 +147,7 @@ namespace Connection
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				List<Player>players = db.Player.Where(player => player.scoreObtained > 0).ToList<Player>();
-				playersOrder = players.OrderBy(score => score.scoreObtained).ToList();
+				playersOrder = players.OrderByDescending(score => score.scoreObtained).ToList();
 			}
 			return playersOrder;
 		}
@@ -250,29 +250,14 @@ namespace Connection
 			Sentence sentence = new Sentence();
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
-				int id = GenerateIdSearch();
 				do
 				{
-					sentence = db.Sentence.SingleOrDefault(sentenceSearch => sentenceSearch.idSentence == id);
+					sentence = db.Sentence.OrderBy(r => Guid.NewGuid()).Take(1).FirstOrDefault();
 				} while (sentence == null);
 			}
 			return sentence;
 		}
-		private int CountRowsSentence()
-		{
-			int count = 0;
-			using (HangmanGameContext db = new HangmanGameContext())
-			{
-				count = db.Sentence.Count();
-			}
-			return count;
-		}
-		private int GenerateIdSearch()
-		{
-			Random random = new Random();
-			int code = random.Next(1,CountRowsSentence());
-			return code;
-		}
+		
 		public bool RegisterReport(ReportMisConduct report)
 		{
 			bool isReport = false;
@@ -309,6 +294,20 @@ namespace Connection
 				}
 			}
 			return isReportAccountPlayer;
+		}
+
+		public bool SavePoints(string nickname, int points)
+		{
+			bool save = false;
+			Player player = new Player();
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
+				player.scoreObtained += points;
+				db.SaveChanges();
+				save = true;
+			}
+			return save;
 		}
 	}
 }
