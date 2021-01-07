@@ -60,7 +60,7 @@
           <Property Name="scoreSentence" Type="int" Nullable="false" />
           <Property Name="sentenceWordSpanish" Type="varchar" MaxLength="100" />
           <Property Name="hintSpanish" Type="varchar" MaxLength="150" Nullable="false" />
-          <Property Name="sentenceWordEnglish" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="sentenceWordEnglish" Type="varchar" MaxLength="100" />
           <Property Name="hintEnglish" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="category" Type="varchar" MaxLength="4" Nullable="false" />
         </EntityType>
@@ -233,10 +233,10 @@
           <Property Name="scoreSentence" Type="Int32" Nullable="false" />
           <Property Name="sentenceWordSpanish" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="hintSpanish" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="sentenceWordEnglish" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="sentenceWordEnglish" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="hintEnglish" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Match" Relationship="HangmanGameModel.FK_dbo_Match_1" FromRole="Sentence" ToRole="Match" />
           <Property Name="category" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Match" Relationship="HangmanGameModel.FK_dbo_Match_1" FromRole="Sentence" ToRole="Match" />
         </EntityType>
         <Association Name="FK_dbo_Account_1">
           <End Type="HangmanGameModel.Player" Role="Player" Multiplicity="1" />

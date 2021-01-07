@@ -15,7 +15,7 @@ namespace HangmanGameService
         void Register(ServiceAccount account, ServicePlayer servicePlayer);
 
         [OperationContract]
-        void SearchNickNamePlayer(string nickname);
+        void SearchNicknamePlayer(string nickname);
 
         [OperationContract]
         void SendEmail(string email, int code);
@@ -30,7 +30,7 @@ namespace HangmanGameService
         void SearchRepeatEmailAccount(string emailEdit, int idAccount);
 
         [OperationContract]
-        void SearchRepeatNickNamePlayer(string nickNameEdit, string nickNameCurrent);
+        void SearchRepeatNicknamePlayer(string nickNameEdit, string nickNameCurrent);
 
         [OperationContract]
         void UpdateEmail(string email, int idAccount);

@@ -7,8 +7,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel;
 using System.Threading;
-using System.Globalization;
-using System.Collections.ObjectModel;
+
 
 namespace HangmanGameService
 {
@@ -38,10 +37,10 @@ namespace HangmanGameService
             serviceAccount.PasswordAccount = account.passwordAccount;
             OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountResponseAccount(serviceAccount);
         }
-        public void SearchPlayer(string nickName)
+        public void SearchPlayer(string nickname)
         {
             Connection.QueryDB consult = new Connection.QueryDB();
-            Player player = consult.SearchPlayer(nickName);
+            Player player = consult.SearchPlayer(nickname);
             ServicePlayer servicePlayer = new ServicePlayer();
             servicePlayer.NickName = player.nickName;
             servicePlayer.NamePlayer = player.namePlayer;
@@ -57,7 +56,7 @@ namespace HangmanGameService
     {
         public void SearchBestScoresPlayer()
         {
-            Connection.QueryDB consult = new Connection.QueryDB();
+            QueryDB consult = new QueryDB();
 
             List<Player> Player = consult.SearchBestScoresPlayer();
             List<ServicePlayer> ServicePlayer = new List<ServicePlayer>();
@@ -87,24 +86,24 @@ namespace HangmanGameService
     public partial class HangmanGameService : IPlayConnect
     {
         private Dictionary<string, IPlayConnectCallback> playersConnectCallback = new Dictionary<string, IPlayConnectCallback>();
-        private List<ServicePlayer> playersNickNameConnect = new List<ServicePlayer>();
+        private List<ServicePlayer> playersNicknameConnect = new List<ServicePlayer>();
         private bool isStartGame = false;
 
         public void PlayerConnect(string nickname)
         {
             var connection = OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>();
-            if (playersNickNameConnect.Count == 0)
+            if (playersNicknameConnect.Count == 0)
             {
                 ServicePlayer servicePlayer = new ServicePlayer();
                 servicePlayer.NickName = nickname;
-                this.playersNickNameConnect.Add(servicePlayer);
+                this.playersNicknameConnect.Add(servicePlayer);
                 playersConnectCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>());
-                OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().PlayerConnectList(playersNickNameConnect);
+                OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().PlayerConnectList(playersNicknameConnect);
             }
             else
             {
                 bool isRegisterNickname = false;
-                foreach (var players in playersNickNameConnect)
+                foreach (var players in playersNicknameConnect)
                 {
                     if (nickname.Equals(players.NickName))
                     {
@@ -116,7 +115,7 @@ namespace HangmanGameService
                 {
                     ServicePlayer servicePlayer = new ServicePlayer();
                     servicePlayer.NickName = nickname;
-                    this.playersNickNameConnect.Add(servicePlayer);
+                    this.playersNicknameConnect.Add(servicePlayer);
                     playersConnectCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>());
                 }
 
@@ -124,20 +123,20 @@ namespace HangmanGameService
                 {
                     if (!connection.Equals(result.Value))
                     {
-                        result.Value.PlayerConnectList(playersNickNameConnect);
+                        result.Value.PlayerConnectList(playersNicknameConnect);
                     }
                 }
-                OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().PlayerConnectList(playersNickNameConnect);
+                OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().PlayerConnectList(playersNicknameConnect);
             }
         }
         public void PlayerDisconnect(string nickname)
         {
             var connection = OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>();
-            for (int index=0; index< playersNickNameConnect.Count;index++)
+            for (int index=0; index< playersNicknameConnect.Count;index++)
             {
-                if (nickname.Equals(playersNickNameConnect[index].NickName))
+                if (nickname.Equals(playersNicknameConnect[index].NickName))
                 {
-                    playersNickNameConnect.RemoveAt(index);
+                    playersNicknameConnect.RemoveAt(index);
                     playersConnectCallback.Remove(nickname);
                     break;
                 }
@@ -146,12 +145,12 @@ namespace HangmanGameService
             {
                 if (!connection.Equals(result.Value))
                 {
-                    result.Value.PlayerConnectList(playersNickNameConnect);
+                    result.Value.PlayerConnectList(playersNicknameConnect);
                 }
             }
-            OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().PlayerConnectList(playersNickNameConnect);
+            OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().PlayerConnectList(playersNicknameConnect);
         }
-        public void StartGame(string nickName)
+        public void StartGame(string nickname)
         {
             isStartGame = true;
             var connection = OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>();
@@ -172,7 +171,7 @@ namespace HangmanGameService
             match.dateHour = dateTimeCurrent;
             match.idMatch = consult.RegisterMatch(match);
             List<Player> players = new List<Player>();
-            foreach (ServicePlayer servicePlayerConnect in playersNickNameConnect)
+            foreach (ServicePlayer servicePlayerConnect in playersNicknameConnect)
             {
                 Player playerConnect = new Player();
                 playerConnect.nickName = servicePlayerConnect.NickName;
@@ -181,7 +180,7 @@ namespace HangmanGameService
             consult.RegisterPlayerMatch(match.idMatch, players);
             foreach (KeyValuePair<string, IPlayConnectCallback> result in playersConnectCallback)
             {
-                if (!result.Key.Equals(nickName))
+                if (!result.Key.Equals(nickname))
                 {
                     result.Value.SentenceFound(serviceSentence);
                 }
@@ -233,7 +232,7 @@ namespace HangmanGameService
     }
         public partial class HangmanGameService : IPlayerManager
     {
-        Connection.QueryDB consult = new Connection.QueryDB();
+        QueryDB consult = new QueryDB();
         public void LogIn(string email, string password)
         {
             bool log = consult.IsLog(email, password);
@@ -254,7 +253,7 @@ namespace HangmanGameService
 
         public void Register(ServiceAccount account, ServicePlayer accountPlayer)
         {
-            Connection.QueryDB consult = new Connection.QueryDB();
+            QueryDB consult = new QueryDB();
             Account dataAccount = new Account();
             dataAccount.email = account.Email;
             dataAccount.passwordAccount = account.PasswordAccount;
@@ -266,15 +265,15 @@ namespace HangmanGameService
             dataPlayer.lastName = accountPlayer.LastName;
             dataPlayer.statusPlayer = accountPlayer.StatusPlayer;
             dataPlayer.nickName = accountPlayer.NickName;
-
-            bool register = consult.RegisterPlayer(dataAccount, dataPlayer);
+            bool register = false;
+            register = consult.RegisterPlayer(dataAccount, dataPlayer);
             OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(register);
         }
-        public void SearchNickNamePlayer(string nickName)
+        public void SearchNicknamePlayer(string nickname)
         {
             Connection.QueryDB consult = new Connection.QueryDB();
-            bool searchNickName = consult.SearchNicknamePlayer(nickName);
-            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(searchNickName);
+            bool searchNickname = consult.SearchNicknamePlayer(nickname);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(searchNickname);
         }
 
         public void SendEmail(string email, int code)
@@ -305,11 +304,11 @@ namespace HangmanGameService
         }
 
 
-        public void SearchRepeatNickNamePlayer(string nickNameEdit, string nickNameCurrent)
+        public void SearchRepeatNicknamePlayer(string nicknameEdit, string nicknameCurrent)
         {
             Connection.QueryDB consult = new Connection.QueryDB();
-            bool repeatNickName = consult.SearchRepeatNickNamePlayer(nickNameEdit, nickNameCurrent);
-            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(repeatNickName);
+            bool repeatNickname = consult.SearchRepeatNicknamePlayer(nicknameEdit, nicknameCurrent);
+            OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(repeatNickname);
         }
 
         public void UpdateEmail(string email, int idAccount)
@@ -319,21 +318,21 @@ namespace HangmanGameService
             OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(updateEmail);
         }
 
-        public void UpdatePlayer(string nickName, ServicePlayer servicePlayerEdit)
+        public void UpdatePlayer(string nickname, ServicePlayer servicePlayerEdit)
         {
             Player playerEdit = new Player();
             playerEdit.namePlayer = servicePlayerEdit.NamePlayer;
             playerEdit.lastName = servicePlayerEdit.LastName;
             playerEdit.nickName = servicePlayerEdit.NickName;
             Connection.QueryDB consult = new Connection.QueryDB();
-            bool updatePlayer = consult.UpdatePlayer(nickName, playerEdit);
+            bool updatePlayer = consult.UpdatePlayer(nickname, playerEdit);
             OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(updatePlayer);
         }
 
-        public void DeleteAccountPlayer(string nickName)
+        public void DeleteAccountPlayer(string nickname)
         {
             Connection.QueryDB consult = new Connection.QueryDB();
-            bool isDeletePlayer = consult.DeleteAccountPlayer(nickName);
+            bool isDeletePlayer = consult.DeleteAccountPlayer(nickname);
             OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(isDeletePlayer);
         }
     }
