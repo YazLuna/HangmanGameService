@@ -83,10 +83,8 @@ namespace HangmanGameService
 	{
 		private Dictionary<string, IPlayConnectCallback> playersConnectCallback = new Dictionary<string, IPlayConnectCallback>();
 		private Dictionary<string, IPlayConnectCallback> winnersConnectCallback = new Dictionary<string, IPlayConnectCallback>();
-		private Dictionary<string, IPlayConnectCallback> chatCallback = new Dictionary<string, IPlayConnectCallback>();
 		private List<ServicePlayer> playersNickNameConnect = new List<ServicePlayer>();
 		private List<ServiceWinner> playersWinner = new List<ServiceWinner>();
-		private Dictionary<string, List<string>> messages = new Dictionary<string, List<string>>();
 		private bool isStartGame = false;
 
 		public void PlayerConnect(string nickname)
@@ -98,8 +96,6 @@ namespace HangmanGameService
 				servicePlayer.NickName = nickname;
 				this.playersNickNameConnect.Add(servicePlayer);
 				playersConnectCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>());
-				chatCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>());
-				messages.Add(nickname, new List<string>() { "Welcome to HangmanGame chat" });
 				OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().PlayerConnectList(playersNickNameConnect);
 			}
 			else
@@ -119,8 +115,6 @@ namespace HangmanGameService
 					servicePlayer.NickName = nickname;
 					this.playersNickNameConnect.Add(servicePlayer);
 					playersConnectCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>());
-					chatCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>());
-					messages.Add(nickname, new List<string>() { "Welcome to HangmanGame chat" });
 				}
 
 				foreach (KeyValuePair<string, IPlayConnectCallback> result in playersConnectCallback)
@@ -142,8 +136,6 @@ namespace HangmanGameService
 				{
 					playersNickNameConnect.RemoveAt(index);
 					playersConnectCallback.Remove(nickname);
-					messages.Remove(nickname);
-					chatCallback.Remove(nickname);
 					break;
 				}
 			}
@@ -201,40 +193,6 @@ namespace HangmanGameService
 		public void VerifyGameStart()
 		{
 			OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().IsStarGame(isStartGame);
-		}
-
-		public void GetNewMessage(string nickname)
-		{
-			List<string> myNewMessages = messages[nickname];
-			messages[nickname].Clear();
-			OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().PlayerEntryMessage(myNewMessages);
-		}
-
-		public void SendNewMessage(string newMessage, string nickname)
-		{
-			var connection = OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>();
-			/*foreach (var players in playersNickNameConnect)
-			{
-				if (!nickname.Equals(players.NickName))
-				{
-					messages[players.NickName].Add(newMessage);
-				}
-			}*/
-
-			foreach (KeyValuePair<string, IPlayConnectCallback> result in chatCallback)
-			{
-				if (!connection.Equals(result.Value))
-				{
-					//List<string> myNewMessages = messages[nickname];
-					result.Value.PlayerEntryOneMessage(newMessage);
-					Console.WriteLine(result.Key + "paso");
-				}
-				else
-				{
-					Console.WriteLine(result.Key + "paso dueño ");
-					OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().IsStarGame(isStartGame);
-				}
-			}
 		}
 
 		public void GameOver(ServiceWinner serviceWinner)
@@ -297,9 +255,7 @@ namespace HangmanGameService
 			playersConnectCallback.Clear();
 			playersNickNameConnect.Clear();
 			playersWinner.Clear();
-			messages.Clear();
 			winnersConnectCallback.Clear();
-			chatCallback.Clear();
 		}
 	}
 
@@ -488,9 +444,10 @@ namespace HangmanGameService
 		public void GetNewMessages(string nickname)
 		{
 			List<string> myNewMessages = incomingMessages[nickname];
-			incomingMessages[nickname] = new List<string>();
+			incomingMessages[nickname].Clear();
 			OperationContext.Current.GetCallbackChannel<IChatCallback>().PlayerEntryMessages(myNewMessages);
 		}
+
 
 		public void SendNewMessages(string newMessage, string nickname)
 		{
@@ -514,14 +471,49 @@ namespace HangmanGameService
 			OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseBoolean(true);
 		}
 
-		public void GetAllPlayers()
+		/*public void SendNewMessage(string newMessage, string nickname)
 		{
-			OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseList(this.playersConnect);
-		}
+			var connection = OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>();
+			foreach (var players in playersNickNameConnect)
+			{
+				if (!nickname.Equals(players.NickName))
+				{
+					messages[players.NickName].Add(newMessage);
+				}
+			}
 
+			foreach (KeyValuePair<string, IPlayConnectCallback> result in chatCallback)
+			{
+				if (!connection.Equals(result.Value))
+				{
+					//List<string> myNewMessages = messages[nickname];
+					result.Value.PlayerEntryOneMessage(newMessage);
+					Console.WriteLine(result.Key + "paso");
+				}
+				else
+				{
+					Console.WriteLine(result.Key + "paso dueño ");
+					OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().IsStarGame(isStartGame);
+				}
+			}
+		}
+		*/
 		public void RemoveUser(string nickname)
 		{
-			this.playersConnect.RemoveAll(player => player.NickName == nickname);
+			for (int index = 0; index < playersConnect.Count; index++)
+			{
+				if (nickname.Equals(playersConnect[index].NickName))
+				{
+					playersConnect.RemoveAt(index);
+					playersCallback.Remove(nickname);
+					break;
+				}
+			}
+			if (playersCallback.Count == 0)
+			{
+				playersConnect.Clear();
+				playersCallback.Clear();
+			}
 			OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseBoolean(true);
 		}
 	}

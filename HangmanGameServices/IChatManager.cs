@@ -16,9 +16,6 @@ namespace HangmanGameService
         void SendNewMessages(string newMessage, string nickname);
 
         [OperationContract]
-        void GetAllPlayers();
-
-        [OperationContract]
         void RemoveUser(string nickname);
     }
 
@@ -29,15 +26,7 @@ namespace HangmanGameService
         void ChatResponseBoolean(bool responseBoolean);
 
         [OperationContract]
-        void ChatResponse(string responseString);
-
-        [OperationContract]
-        void ChatResponseList(List<ServicePlayer> responseList);
-
-        [OperationContract]
         void PlayerEntryMessages(List<string> responseListString);
-
-
     }
 }
 

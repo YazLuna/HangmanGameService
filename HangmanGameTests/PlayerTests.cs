@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Connection;
 using System.Threading;
-
+using System.Collections.Generic;
 
 namespace HangmanGameTests
 {
@@ -253,6 +253,38 @@ namespace HangmanGameTests
             isDeleteAccountPlayer = queryDB.DeleteAccountPlayer(null);
             Thread.Sleep(2000);
             Assert.IsTrue(isDeleteAccountPlayer);
+        }
+
+        [TestMethod]
+        public void TestSearchBestScorePlayers()
+        {
+            QueryDB queryDB = new QueryDB();
+            List<Player>  bestScorePlayers = queryDB.SearchBestScoresPlayer();
+            Assert.IsNotNull(bestScorePlayers);
+        }
+
+        [TestMethod]
+        public void TestIsLog()
+        {
+            QueryDB queryDB = new QueryDB();
+            bool isLog = queryDB.IsLog("martha_15_7@gmail.com", "TQBtAG8AbAAxADgAMAA1ADEANQAjAA==");
+            Assert.IsTrue(isLog);
+        }
+
+        [TestMethod]
+        public void TestErrorIsLog()
+        {
+            QueryDB queryDB = new QueryDB();
+            bool isLog = queryDB.IsLog("zs18012124@estudiante.uv.mx", "VwBpAGcAZQB0AHQAYQBfADQA");
+            Assert.IsFalse(isLog);
+        }
+
+        [TestMethod]
+        public void TestSearchInformationPlayer()
+        {
+            QueryDB queryDB = new QueryDB();
+            Player player = queryDB.SearchInformationPlayer("martha_15_7@gmail.com");
+            Assert.IsNotNull(player.nickName);
         }
     }
 }

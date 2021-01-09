@@ -60,5 +60,29 @@ namespace HangmanGameTests
             Thread.Sleep(2000);
             Assert.IsTrue(isRegisterPlayerMatch);
         }
+
+        [TestMethod]
+        public void TestSearchSentence()
+        {
+            QueryDB queryDB = new QueryDB();
+            Sentence sentence = queryDB.SearchSentence();
+            Assert.IsNotNull(sentence.hintSpanish);
+        }
+
+        [TestMethod]
+        public void TestSavePoints()
+        {
+            QueryDB queryDB = new QueryDB();
+            bool saveOk = queryDB.SavePoints("MiroStart",1000);
+            Assert.IsTrue(saveOk);
+        }
+
+        [TestMethod]
+        public void TestErrorSavePoints()
+        {
+            QueryDB queryDB = new QueryDB();
+            bool saveError = queryDB.SavePoints("MiroStarts", 1000);
+            Assert.IsFalse(saveError);
+        }
     }
 }
