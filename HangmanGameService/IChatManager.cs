@@ -26,7 +26,7 @@ namespace HangmanGameService
         void ChatResponseBoolean(bool responseBoolean);
 
         [OperationContract]
-        void PlayerEntryMessages(List<string> responseListString);
+        void PlayerEntryMessages(string responseListString);
     }
 }
 

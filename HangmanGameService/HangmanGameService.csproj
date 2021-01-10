@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\DocumentationHangmanGameService.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -64,16 +65,13 @@
     <Compile Include="HangmanGameService.cs" />
     <Compile Include="IAccountManager.cs" />
     <Compile Include="IChatManager.cs" />
-    <Compile Include="IHangmanGameService.cs" />
     <Compile Include="IInformationPlayerManager.cs" />
     <Compile Include="IPlayConnect.cs" />
     <Compile Include="IPlayerManager.cs" />
     <Compile Include="IPlayerScoresManager.cs" />
     <Compile Include="IReportManager.cs" />
     <Compile Include="ServiceAccount.cs" />
-    <Compile Include="ServiceMatch.cs" />
     <Compile Include="ServicePlayer.cs" />
-    <Compile Include="ServicePlayer_Match.cs" />
     <Compile Include="ServiceReportMisConduct.cs" />
     <Compile Include="ServiceSentence.cs" />
     <Compile Include="Program.cs" />
