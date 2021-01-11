@@ -65,11 +65,13 @@ namespace HangmanGameService
 			QueryDB consult = new QueryDB();
 			List<Player> Player = consult.SearchBestScoresPlayer();
 			List<ServicePlayer> ServicePlayer = new List<ServicePlayer>();
+			int playerCount = Player.Count;
 
 			for (int index = 0; index < Player.Count; index++)
 			{
 				Player playerIndex = Player[index];
-				ServicePlayer.Add(new ServicePlayer() { NickName = playerIndex.nickName, ScoreObtained = playerIndex.scoreObtained, Position = index + 1 });
+				ServicePlayer.Add(new ServicePlayer() { NickName = playerIndex.nickName, ScoreObtained = playerIndex.scoreObtained, Position = playerCount });
+				playerCount--;
 			}
 			OperationContext.Current.GetCallbackChannel<IPlayerScoresCallback>().PlayerResponseList(ServicePlayer);
 		}
@@ -548,12 +550,13 @@ namespace HangmanGameService
 		/// <param name="nickname">Player's nickname to add to chat.</param>
 		public void ClientConnect(string nickname)
 		{
-			var connection = OperationContext.Current.GetCallbackChannel<IChatCallback>();
 			if (playersConnect.Count == 0)
 			{
-				ServicePlayer servicePlayer = new ServicePlayer();
-				servicePlayer.NickName = nickname;
-				this.playersConnect.Add(servicePlayer);
+                ServicePlayer servicePlayer = new ServicePlayer
+                {
+                    NickName = nickname
+                };
+                this.playersConnect.Add(servicePlayer);
 				playersCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IChatCallback>());
 			}
 			else
@@ -569,9 +572,11 @@ namespace HangmanGameService
 				}
 				if (!isRegisterNickname)
 				{
-					ServicePlayer servicePlayer = new ServicePlayer();
-					servicePlayer.NickName = nickname;
-					this.playersConnect.Add(servicePlayer);
+                    ServicePlayer servicePlayer = new ServicePlayer
+                    {
+                        NickName = nickname
+                    };
+                    this.playersConnect.Add(servicePlayer);
 					playersCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IChatCallback>());
 				}
 			}
