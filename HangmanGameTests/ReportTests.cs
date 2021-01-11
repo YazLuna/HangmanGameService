@@ -33,11 +33,11 @@ namespace HangmanGameTests
             DateTime dateTimeCurrent = DateTime.Now;
             reportMisConduct.dateHour = dateTimeCurrent;
             reportMisConduct.idReportedPlayer = "MiroStart";
-            reportMisConduct.idReportingPlayer = "MariaFer13";
+            reportMisConduct.idReportingPlayer = null;
             QueryDB queryDB = new QueryDB();
             bool isRegisterReport;
-            Thread.Sleep(2000);
             isRegisterReport = queryDB.RegisterReport(reportMisConduct);
+            Thread.Sleep(2000);
             Assert.IsTrue(isRegisterReport);
         }
 
@@ -53,11 +53,11 @@ namespace HangmanGameTests
         [TestMethod]
         public void TestErrorSearchReport()
         {
-            List<ReportMisConduct> reportMisConducts = new List<ReportMisConduct>();
+            List<ReportMisConduct> reportMisConducts;
             QueryDB queryDB = new QueryDB();
             reportMisConducts = queryDB.SearchReport("Martha252");
             Thread.Sleep(2000);
-            Assert.IsNotNull(reportMisConducts);
+            Assert.AreNotEqual(0,reportMisConducts.Count);
         }
 
         [TestMethod]
