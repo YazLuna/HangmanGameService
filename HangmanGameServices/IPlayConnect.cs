@@ -20,12 +20,6 @@ namespace HangmanGameService
 
         [OperationContract]
         void GameOver(ServiceWinner serviceWinner);
-
-        [OperationContract]
-        void GetNewMessage(string nickname);
-
-        [OperationContract]
-        void SendNewMessage(string newMessage, string nickname);
     }
 
     [ServiceContract]
@@ -42,11 +36,5 @@ namespace HangmanGameService
 
         [OperationContract]
         void PlayerWinner(ServiceWinner playerWinner);
-
-        [OperationContract]
-        void PlayerEntryMessage(List<string> responseListString);
-
-        [OperationContract]
-        void PlayerEntryOneMessage(string responseListString);
     }
 }
