@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connection", "Connection\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangmanGameTests", "HangmanGameTests\HangmanGameTests.csproj", "{C130CA58-4D30-478C-9C9B-45FFFD59F929}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangmanGameService", "HangmanGameService\HangmanGameService.csproj", "{660BF614-5E8D-424B-8ED2-A2F406AF93B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangmanGameService", "HangmanGameServices\HangmanGameService.csproj", "{660BF614-5E8D-424B-8ED2-A2F406AF93B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

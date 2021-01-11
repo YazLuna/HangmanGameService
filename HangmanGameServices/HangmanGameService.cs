@@ -23,15 +23,14 @@ namespace HangmanGameService
 		{
 			QueryDB consult = new QueryDB();
 			Account account = consult.SearchAccount(email);
-<<<<<<< HEAD:HangmanGameService/HangmanGameService.cs
-            ServiceAccount serviceAccount = new ServiceAccount
-            {
-                IdAccount = account.idAccount,
-                NickName = account.nickName,
-                Email = account.email,
-                PasswordAccount = account.passwordAccount
-            };
-            OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountResponseAccount(serviceAccount);
+			ServiceAccount serviceAccount = new ServiceAccount
+			{
+				IdAccount = account.idAccount,
+				NickName = account.nickName,
+				Email = account.email,
+				PasswordAccount = account.passwordAccount
+			};
+			OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountResponseAccount(serviceAccount);
 		}
 		/// <summary>
 		/// Search if the player is registered in the database
@@ -41,35 +40,15 @@ namespace HangmanGameService
 		{
 			QueryDB consult = new QueryDB();
 			Player player = consult.SearchPlayer(nickname);
-            ServicePlayer servicePlayer = new ServicePlayer
-            {
-                NickName = player.nickName,
-                NamePlayer = player.namePlayer,
-                LastName = player.lastName,
-                ScoreObtained = player.scoreObtained,
-                StatusPlayer = player.statusPlayer
-            };
-            OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountResponsePlayer(servicePlayer);
-=======
-			ServiceAccount serviceAccount = new ServiceAccount();
-			serviceAccount.IdAccount = account.idAccount;
-			serviceAccount.NickName = account.nickName;
-			serviceAccount.Email = account.email;
-			serviceAccount.PasswordAccount = account.passwordAccount;
-			OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountPlayerResponse(serviceAccount);
-		}
-		public void SearchPlayer(string nickName)
-		{
-			QueryDB consult = new QueryDB();
-			Player player = consult.SearchPlayer(nickName);
-			ServicePlayer servicePlayer = new ServicePlayer();
-			servicePlayer.NickName = player.nickName;
-			servicePlayer.NamePlayer = player.namePlayer;
-			servicePlayer.LastName = player.lastName;
-			servicePlayer.ScoreObtained = player.scoreObtained;
-			servicePlayer.StatusPlayer = player.statusPlayer;
-			OperationContext.Current.GetCallbackChannel<IAccountCallback>().PlayerResponse(servicePlayer);
->>>>>>> master:HangmanGameServices/HangmanGameService.cs
+			ServicePlayer servicePlayer = new ServicePlayer
+			{
+				NickName = player.nickName,
+				NamePlayer = player.namePlayer,
+				LastName = player.lastName,
+				ScoreObtained = player.scoreObtained,
+				StatusPlayer = player.statusPlayer
+			};
+			OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountResponsePlayer(servicePlayer);
 		}
 	}
 
@@ -111,12 +90,12 @@ namespace HangmanGameService
 		{
 			QueryDB consult = new QueryDB();
 			Player player = consult.SearchInformationPlayer(email);
-            ServicePlayer servicePlayer = new ServicePlayer
-            {
-                NickName = player.nickName,
-                ScoreObtained = player.scoreObtained
-            };
-            OperationContext.Current.GetCallbackChannel<IInformationPlayerCallback>().PlayerResponseInformation(servicePlayer);
+			ServicePlayer servicePlayer = new ServicePlayer
+			{
+				NickName = player.nickName,
+				ScoreObtained = player.scoreObtained
+			};
+			OperationContext.Current.GetCallbackChannel<IInformationPlayerCallback>().PlayerResponseInformation(servicePlayer);
 		}
 	}
 
@@ -183,7 +162,7 @@ namespace HangmanGameService
 		public void PlayerDisconnect(string nickname)
 		{
 			var connection = OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>();
-			for (int index = Number.NumberValue(NumberValues.ZERO); index < playersNickNameConnect.Count; index++)
+			for (int index = 0; index < playersNickNameConnect.Count; index++)
 			{
 				if (nickname.Equals(playersNickNameConnect[index].NickName))
 				{
@@ -205,14 +184,11 @@ namespace HangmanGameService
 			}
 			OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().PlayerConnectList(playersNickNameConnect);
 		}
-<<<<<<< HEAD:HangmanGameService/HangmanGameService.cs
 
 		/// <summary>
 		/// Find the phrase and start the game to one player
 		/// </summary>
 		/// <param name="nickname">Player's nickname to start game .</param>
-=======
->>>>>>> master:HangmanGameServices/HangmanGameService.cs
 		public void StartGame(string nickname)
 		{
 			isStartGame = true;
@@ -288,7 +264,7 @@ namespace HangmanGameService
 		public ServiceWinner SearchWinner()
 		{
 			ServiceWinner servicePlayerWinner = new ServiceWinner();
-			servicePlayerWinner = playersWinner[0];
+			servicePlayerWinner = playersWinner[Number.NumberValue(NumberValues.ZERO)];
 			for (int index = 1; index < playersWinner.Count; index++)
 			{
 				if (playersWinner[index].Points > servicePlayerWinner.Points)
@@ -344,14 +320,14 @@ namespace HangmanGameService
 		/// <param name="serviceReportMisConduct">Object that contains all the report data.</param>
 		public void ReportPlayer(ServiceReportMisConduct serviceReportMisConduct)
 		{
-            ReportMisConduct reportMisConduct = new ReportMisConduct
-            {
-                idReportedPlayer = serviceReportMisConduct.IdReportedPlayer,
-                idReportingPlayer = serviceReportMisConduct.IdReportingPlayer,
-                typeReport = serviceReportMisConduct.TypeReport,
-                additionalContext = serviceReportMisConduct.AdditionalContext
-            };
-            DateTime dateTimeCurrent = DateTime.Now;
+			ReportMisConduct reportMisConduct = new ReportMisConduct
+			{
+				idReportedPlayer = serviceReportMisConduct.IdReportedPlayer,
+				idReportingPlayer = serviceReportMisConduct.IdReportingPlayer,
+				typeReport = serviceReportMisConduct.TypeReport,
+				additionalContext = serviceReportMisConduct.AdditionalContext
+			};
+			DateTime dateTimeCurrent = DateTime.Now;
 			reportMisConduct.dateHour = dateTimeCurrent;
 			QueryDB consult = new QueryDB();
 			bool isReport = consult.RegisterReport(reportMisConduct);
@@ -374,13 +350,13 @@ namespace HangmanGameService
 			List<ReportMisConduct> reportMisConducts = consult.SearchReport(nickname);
 			foreach (ReportMisConduct report in reportMisConducts)
 			{
-                ServiceReportMisConduct serviceReport = new ServiceReportMisConduct
-                {
-                    AdditionalContext = report.additionalContext,
-                    DateHour = report.dateHour,
-                    TypeReport = report.typeReport
-                };
-                serviceReportList.Add(serviceReport);
+				ServiceReportMisConduct serviceReport = new ServiceReportMisConduct
+				{
+					AdditionalContext = report.additionalContext,
+					DateHour = report.dateHour,
+					TypeReport = report.typeReport
+				};
+				serviceReportList.Add(serviceReport);
 			}
 			OperationContext.Current.GetCallbackChannel<IReportCallback>().ResponseReportList(serviceReportList);
 		}
@@ -434,23 +410,23 @@ namespace HangmanGameService
 		public void Register(ServiceAccount account, ServicePlayer accountPlayer)
 		{
 			QueryDB consult = new QueryDB();
-            Account dataAccount = new Account
-            {
-                email = account.Email,
-                passwordAccount = account.PasswordAccount,
-                confirmationCode = account.ConfirmationCode,
-                nickName = accountPlayer.NickName
-            };
+			Account dataAccount = new Account
+			{
+				email = account.Email,
+				passwordAccount = account.PasswordAccount,
+				confirmationCode = account.ConfirmationCode,
+				nickName = accountPlayer.NickName
+			};
 
-            Player dataPlayer = new Player
-            {
-                namePlayer = accountPlayer.NamePlayer,
-                lastName = accountPlayer.LastName,
-                statusPlayer = accountPlayer.StatusPlayer,
-                nickName = accountPlayer.NickName
-            };
+			Player dataPlayer = new Player
+			{
+				namePlayer = accountPlayer.NamePlayer,
+				lastName = accountPlayer.LastName,
+				statusPlayer = accountPlayer.StatusPlayer,
+				nickName = accountPlayer.NickName
+			};
 
-            bool register = consult.RegisterPlayer(dataAccount, dataPlayer);
+			bool register = consult.RegisterPlayer(dataAccount, dataPlayer);
 			OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(register);
 		}
 
@@ -472,23 +448,23 @@ namespace HangmanGameService
 		/// <param name="code">Player's code to send.</param>
 		public void SendEmail(string email, int code)
 		{
-            MailMessage correo = new MailMessage
-            {
-                From = new MailAddress("hangmangameproject@gmail.com", "HangmanGame", System.Text.Encoding.UTF8)
-            };
-            correo.To.Add(email);
+			MailMessage correo = new MailMessage
+			{
+				From = new MailAddress("hangmangameproject@gmail.com", "HangmanGame", System.Text.Encoding.UTF8)
+			};
+			correo.To.Add(email);
 			correo.Subject = "Code";
 			correo.Body = "Your code is: " + code;
 			correo.IsBodyHtml = true;
 			correo.Priority = MailPriority.Normal;
-            SmtpClient smtp = new SmtpClient
-            {
-                UseDefaultCredentials = false,
-                Host = "smtp.gmail.com",
-                Port = 587,
-                Credentials = new System.Net.NetworkCredential("hangmangameproject@gmail.com", "Martha-Yazminz4")
-            };
-            ServicePointManager.ServerCertificateValidationCallback =
+			SmtpClient smtp = new SmtpClient
+			{
+				UseDefaultCredentials = false,
+				Host = "smtp.gmail.com",
+				Port = 587,
+				Credentials = new System.Net.NetworkCredential("hangmangameproject@gmail.com", "Martha-Yazminz4")
+			};
+			ServicePointManager.ServerCertificateValidationCallback =
 				delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
 			smtp.EnableSsl = true;
 			smtp.Send(correo);
@@ -537,13 +513,13 @@ namespace HangmanGameService
 		/// <param name="servicePlayerEdit">Object with the new data to add.</param>
 		public void UpdatePlayer(string nickname, ServicePlayer servicePlayerEdit)
 		{
-            Player playerEdit = new Player
-            {
-                namePlayer = servicePlayerEdit.NamePlayer,
-                lastName = servicePlayerEdit.LastName,
-                nickName = servicePlayerEdit.NickName
-            };
-            QueryDB consult = new QueryDB();
+			Player playerEdit = new Player
+			{
+				namePlayer = servicePlayerEdit.NamePlayer,
+				lastName = servicePlayerEdit.LastName,
+				nickName = servicePlayerEdit.NickName
+			};
+			QueryDB consult = new QueryDB();
 			bool updatePlayer = consult.UpdatePlayer(nickname, playerEdit);
 			OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(updatePlayer);
 		}
@@ -576,11 +552,11 @@ namespace HangmanGameService
 		{
 			if (playersConnect.Count == Number.NumberValue(NumberValues.ZERO))
 			{
-                ServicePlayer servicePlayer = new ServicePlayer
-                {
-                    NickName = nickname
-                };
-                this.playersConnect.Add(servicePlayer);
+				ServicePlayer servicePlayer = new ServicePlayer
+				{
+					NickName = nickname
+				};
+				this.playersConnect.Add(servicePlayer);
 				playersCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IChatCallback>());
 			}
 			else
@@ -596,11 +572,11 @@ namespace HangmanGameService
 				}
 				if (!isRegisterNickname)
 				{
-                    ServicePlayer servicePlayer = new ServicePlayer
-                    {
-                        NickName = nickname
-                    };
-                    this.playersConnect.Add(servicePlayer);
+					ServicePlayer servicePlayer = new ServicePlayer
+					{
+						NickName = nickname
+					};
+					this.playersConnect.Add(servicePlayer);
 					playersCallback.Add(nickname, OperationContext.Current.GetCallbackChannel<IChatCallback>());
 				}
 			}
