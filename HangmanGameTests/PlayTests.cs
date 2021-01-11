@@ -32,7 +32,7 @@ namespace HangmanGameTests
             int idMatch;
             idMatch = queryDB.RegisterMatch(match);
             Thread.Sleep(2000);
-            Assert.IsNotNull(idMatch);
+            Assert.AreNotEqual(0,idMatch);
         }
 
         [TestMethod]

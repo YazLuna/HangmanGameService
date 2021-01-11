@@ -23,6 +23,7 @@ namespace HangmanGameService
 		{
 			QueryDB consult = new QueryDB();
 			Account account = consult.SearchAccount(email);
+<<<<<<< HEAD:HangmanGameService/HangmanGameService.cs
             ServiceAccount serviceAccount = new ServiceAccount
             {
                 IdAccount = account.idAccount,
@@ -49,6 +50,26 @@ namespace HangmanGameService
                 StatusPlayer = player.statusPlayer
             };
             OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountResponsePlayer(servicePlayer);
+=======
+			ServiceAccount serviceAccount = new ServiceAccount();
+			serviceAccount.IdAccount = account.idAccount;
+			serviceAccount.NickName = account.nickName;
+			serviceAccount.Email = account.email;
+			serviceAccount.PasswordAccount = account.passwordAccount;
+			OperationContext.Current.GetCallbackChannel<IAccountCallback>().AccountPlayerResponse(serviceAccount);
+		}
+		public void SearchPlayer(string nickName)
+		{
+			QueryDB consult = new QueryDB();
+			Player player = consult.SearchPlayer(nickName);
+			ServicePlayer servicePlayer = new ServicePlayer();
+			servicePlayer.NickName = player.nickName;
+			servicePlayer.NamePlayer = player.namePlayer;
+			servicePlayer.LastName = player.lastName;
+			servicePlayer.ScoreObtained = player.scoreObtained;
+			servicePlayer.StatusPlayer = player.statusPlayer;
+			OperationContext.Current.GetCallbackChannel<IAccountCallback>().PlayerResponse(servicePlayer);
+>>>>>>> master:HangmanGameServices/HangmanGameService.cs
 		}
 	}
 
@@ -117,7 +138,7 @@ namespace HangmanGameService
 		public void PlayerConnect(string nickname)
 		{
 			var connection = OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>();
-			if (playersNickNameConnect.Count == 0)
+			if (playersNickNameConnect.Count == Number.NumberValue(NumberValues.ZERO))
 			{
 				ServicePlayer servicePlayer = new ServicePlayer();
 				servicePlayer.NickName = nickname;
@@ -162,7 +183,7 @@ namespace HangmanGameService
 		public void PlayerDisconnect(string nickname)
 		{
 			var connection = OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>();
-			for (int index = 0; index < playersNickNameConnect.Count; index++)
+			for (int index = Number.NumberValue(NumberValues.ZERO); index < playersNickNameConnect.Count; index++)
 			{
 				if (nickname.Equals(playersNickNameConnect[index].NickName))
 				{
@@ -178,17 +199,20 @@ namespace HangmanGameService
 					result.Value.PlayerConnectList(playersNickNameConnect);
 				}
 			}
-			if (playersConnectCallback.Count == 0)
+			if (playersConnectCallback.Count == Number.NumberValue(NumberValues.ZERO))
 			{
 				isStartGame = false;
 			}
 			OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>().PlayerConnectList(playersNickNameConnect);
 		}
+<<<<<<< HEAD:HangmanGameService/HangmanGameService.cs
 
 		/// <summary>
 		/// Find the phrase and start the game to one player
 		/// </summary>
 		/// <param name="nickname">Player's nickname to start game .</param>
+=======
+>>>>>>> master:HangmanGameServices/HangmanGameService.cs
 		public void StartGame(string nickname)
 		{
 			isStartGame = true;
@@ -332,7 +356,7 @@ namespace HangmanGameService
 			QueryDB consult = new QueryDB();
 			bool isReport = consult.RegisterReport(reportMisConduct);
 			List<ReportMisConduct> reports = consult.SearchReport(reportMisConduct.idReportedPlayer);
-			if (reports.Count == 10)
+			if (reports.Count == Number.NumberValue(NumberValues.TEN))
 			{
 				consult.ReportAccountPlayer(reportMisConduct.idReportedPlayer);
 			}
@@ -550,7 +574,7 @@ namespace HangmanGameService
 		/// <param name="nickname">Player's nickname to add to chat.</param>
 		public void ClientConnect(string nickname)
 		{
-			if (playersConnect.Count == 0)
+			if (playersConnect.Count == Number.NumberValue(NumberValues.ZERO))
 			{
                 ServicePlayer servicePlayer = new ServicePlayer
                 {
