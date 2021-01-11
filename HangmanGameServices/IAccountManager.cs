@@ -16,9 +16,9 @@ namespace HangmanGameService
     interface IAccountCallback
     {
         [OperationContract]
-        void AccountPlayerResponse(ServiceAccount serviceAccount);
+        void AccountResponseAccount(ServiceAccount serviceAccount);
 
         [OperationContract]
-        void PlayerResponse(ServicePlayer servicePlayer);
+        void AccountResponsePlayer(ServicePlayer servicePlayer);
     }
 }
