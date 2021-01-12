@@ -426,6 +426,7 @@ namespace HangmanGameService
 				namePlayer = servicePlayer.NamePlayer,
 				lastName = servicePlayer.LastName,
 				statusPlayer = servicePlayer.StatusPlayer,
+				scoreObtained = servicePlayer.ScoreObtained,
 				nickName = servicePlayer.NickName
 			};
 
