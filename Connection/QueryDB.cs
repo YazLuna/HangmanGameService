@@ -38,9 +38,9 @@ namespace Connection
 							log = true;
 						}
 					}
-                }
-                catch (DbEntityValidationException exception)
-                {
+				}
+				catch (DbEntityValidationException exception)
+				{
 					TelegramBot.SendToTelegram(exception);
 					LogException.Log(this, exception);
 				}
@@ -57,21 +57,21 @@ namespace Connection
 		public bool RegisterPlayer(Account account, Player player)
 		{
 			bool registerOk = false;
-				using (HangmanGameContext db = new HangmanGameContext())
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				try
 				{
-					try
-					{
-						db.Player.Add(player);
-						db.Account.Add(account);
-						db.SaveChanges();
-						registerOk = true;
-					}
-					catch (DbEntityValidationException exception)
-					{
-						TelegramBot.SendToTelegram(exception);
-						LogException.Log(this, exception);
-					}
+					db.Player.Add(player);
+					db.Account.Add(account);
+					db.SaveChanges();
+					registerOk = true;
 				}
+				catch (DbEntityValidationException exception)
+				{
+					TelegramBot.SendToTelegram(exception);
+					LogException.Log(this, exception);
+				}
+			}
 			return registerOk;
 		}
 
@@ -83,7 +83,7 @@ namespace Connection
 		public int RegisterMatch(Match match)
 		{
 			int idMatch = 0;
-			
+
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				try
@@ -99,7 +99,7 @@ namespace Connection
 					LogException.Log(this, exception);
 				}
 				catch (DbUpdateException exception)
-                {
+				{
 					TelegramBot.SendToTelegram(exception);
 					LogException.Log(this, exception);
 				}
@@ -114,7 +114,7 @@ namespace Connection
 		/// <param name="players">Players of the match</param>
 		/// <returns>If the players were registered to the match successfully</returns>
 		public bool RegisterPlayerMatch(int idMatch, List<Player> players)
-        {
+		{
 			bool isRegisterPlayerMatch = false;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
@@ -140,7 +140,7 @@ namespace Connection
 				}
 			}
 			return isRegisterPlayerMatch;
-        }
+		}
 
 		/// <summary>
 		/// Method to find a player's nickname
@@ -428,7 +428,7 @@ namespace Connection
 			bool updatePlayer = false;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
-				try { 
+				try {
 					Player player = new Player();
 					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
 					if (player != null)
@@ -495,12 +495,12 @@ namespace Connection
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				try
-                {
+				{
 					do
 					{
 						sentence = db.Sentence.OrderBy(r => Guid.NewGuid()).Take(1).FirstOrDefault();
 					} while (sentence == null);
-				} 
+				}
 				catch (DbEntityValidationException exception)
 				{
 					TelegramBot.SendToTelegram(exception);
@@ -541,7 +541,7 @@ namespace Connection
 		/// <param name="nickname">Nickname of the player</param>
 		/// <returns>The player report list</returns>
 		public List<ReportMisConduct> SearchReport(String nickname)
-        {
+		{
 			List<ReportMisConduct> reportMisConducts = new List<ReportMisConduct>();
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
@@ -607,6 +607,189 @@ namespace Connection
 				save = true;
 			}
 			return save;
+		}
+
+		/// <summary>
+		/// Method to delete a player
+		/// </summary>
+		/// <param name="nickname">Nickname of the player</param>
+		/// <returns>If the player was deleted</returns>
+		public bool DeletePlayer(string nickname)
+		{
+			bool isDeletePlayer = false;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				try
+				{
+					Player player = new Player();
+					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
+					if (player != null)
+					{
+						db.Player.Remove(player);
+						db.SaveChanges();
+						isDeletePlayer = true;
+					}
+				}
+				catch (EntityException exception)
+				{
+					TelegramBot.SendToTelegram(exception);
+					LogException.Log(this, exception);
+				}
+			}
+			return isDeletePlayer;
+		}
+
+		/// <summary>
+		/// Method to delete an account
+		/// </summary>
+		/// <param name="nickname">Nickname of the player</param>
+		/// <returns>If the account was deleted</returns>
+		public bool DeleteAccount(string nickname)
+		{
+			bool isDeleteAccount = false;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				try
+				{
+					Account account = new Account();
+					account = db.Account.SingleOrDefault(accountSearch => accountSearch.nickName == nickname);
+					if (account != null)
+					{
+						db.Account.Remove(account);
+						db.SaveChanges();
+						isDeleteAccount = true;
+					}
+				}
+				catch (EntityException exception)
+				{
+					TelegramBot.SendToTelegram(exception);
+					LogException.Log(this, exception);
+				}
+			}
+			return isDeleteAccount;
+		}
+
+		/// <summary>
+		/// Method to delete a report
+		/// </summary>
+		/// <param name="nickname">Nickname of the player</param>
+		/// <returns>If the report was deleted</returns>
+		public bool DeleteReport(string nickname)
+		{
+			bool isDeleteReport = false;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				try
+				{
+					ReportMisConduct report = new ReportMisConduct();
+					report = db.ReportMisConduct.SingleOrDefault(reportSearch => reportSearch.idReportedPlayer == nickname);
+					if (report != null)
+					{
+						db.ReportMisConduct.Remove(report);
+						db.SaveChanges();
+						isDeleteReport = true;
+					}
+				}
+				catch (EntityException exception)
+				{
+					TelegramBot.SendToTelegram(exception);
+					LogException.Log(this, exception);
+				}
+			}
+			return isDeleteReport;
+		}
+
+		/// <summary>
+		/// Method to get the account id
+		/// </summary>
+		/// <param name="email">Email of the account</param>
+		/// <returns>The account id</returns>
+		public int ObtainIdAccount(string email)
+		{
+			int idAccount = 0;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				try
+				{
+					Account account = new Account();
+					account = db.Account.SingleOrDefault(accountSearch => accountSearch.email == email);
+					if (account != null)
+					{
+						idAccount = account.idAccount;
+					}
+				}
+				catch (EntityException exception)
+				{
+					TelegramBot.SendToTelegram(exception);
+					LogException.Log(this, exception);
+				}
+			}
+			return idAccount;
+		}
+
+		/// <summary>
+		/// Method to remove Players from the Match
+		/// </summary>
+		/// <param name="idMatch">Match identifier</param>
+		/// <param name="players">Players from the Match</param>
+		/// <returns>If players were removed from the Match</returns>
+		public bool DeletePlayerMatch(int idMatch, List<Player> players)
+		{
+			bool isDeletePlayerMatch = false;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				try
+				{
+					Match match = new Match();
+					match = db.Match.SingleOrDefault(matchSearch => matchSearch.idMatch == idMatch);
+					if (match != null)
+					{
+						foreach (Player player in players)
+						{
+							Player playerMatch = db.Player.Find(player.nickName);
+							match.Player.Remove(playerMatch);
+						}
+						db.SaveChanges();
+						isDeletePlayerMatch = true;
+					}
+				}
+				catch (DbEntityValidationException exception)
+				{
+					TelegramBot.SendToTelegram(exception);
+					LogException.Log(this, exception);
+				}
+			}
+			return isDeletePlayerMatch;
+		}
+
+		/// <summary>
+		/// Method to delete a Match
+		/// </summary>
+		/// <param name="idMatch">Match of the game</param>
+		/// <returns>If the match was deleted</returns>
+		public bool DeleteMatch(int idMatch)
+		{
+			bool isDeleteMatch = false;
+			using (HangmanGameContext db = new HangmanGameContext())
+			{
+				try
+				{
+					Match match = new Match();
+					match = db.Match.SingleOrDefault(matchSearch => matchSearch.idMatch == idMatch);
+					if (match != null)
+					{
+						db.Match.Remove(match);
+						db.SaveChanges();
+						isDeleteMatch = true;
+					}
+				}
+				catch (EntityException exception)
+				{
+					TelegramBot.SendToTelegram(exception);
+					LogException.Log(this, exception);
+				}
+			}
+			return isDeleteMatch;
 		}
 	}
 }
