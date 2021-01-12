@@ -29,12 +29,12 @@ namespace HangmanGameService
         void PlayerConnectList(List<ServicePlayer> servicePlayerList);
 
         [OperationContract]
-        void IsStarGame(bool isStarGame);
+        void IsStarGame(bool isStarGameRun);
 
         [OperationContract]
         void SentenceFound(ServiceSentence responseSentence);
 
         [OperationContract]
-        void PlayerWinner(ServiceWinner playerWinner);
+        void PlayerWinner(ServiceWinner playerWinnerGame);
     }
 }

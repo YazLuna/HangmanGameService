@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ServiceModel;
+﻿using System.ServiceModel;
 
 namespace HangmanGameService
 {
@@ -8,9 +7,6 @@ namespace HangmanGameService
     {
         [OperationContract]
         void ClientConnect(string nickname);
-
-        [OperationContract]
-        void GetNewMessages(string nickname);
 
         [OperationContract]
         void SendNewMessages(string newMessage, string nickname);
