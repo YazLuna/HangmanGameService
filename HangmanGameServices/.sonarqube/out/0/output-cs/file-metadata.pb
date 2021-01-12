@@ -1,0 +1,14 @@
+P
+EC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\Account.csutf-8a
+VC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\HangmanGameModel.Context.csutf-8Y
+NC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\HangmanGameModel.csutf-8b
+WC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\HangmanGameModel.Designer.csutf-8S
+JC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\LogException.csutf-8N
+CC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\Match.csutf-8O
+DC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\Player.csutf-8^
+UC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\Properties\AssemblyInfo.csutf-8N
+EC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\QueryDB.csutf-8Y
+NC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\ReportMisConduct.csutf-8Q
+FC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\Sentence.csutf-8R
+IC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\TelegramBot.csutf-8‚
+wC:\Users\Ale_2\source\repos\HangmanGameServices\Connection\obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.csutf-8

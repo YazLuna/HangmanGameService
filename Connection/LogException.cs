@@ -4,8 +4,16 @@ using System.Diagnostics;
 
 namespace Connection
 {
-    public class LogException
+    /// <summary>
+	/// This class logs exceptions to telegram
+	/// </summary>
+    public static class LogException
     {
+        /// <summary>
+        /// This method logs exceptions to telegram
+        /// </summary>
+        /// /// <param name="obj">Telegram bot data</param>
+        /// <param name="exception">The exception to log</param>
         public static void Log(object obj, Exception exception)
         {
             string date = System.DateTime.Now.ToString("yyyy-MM-dd");

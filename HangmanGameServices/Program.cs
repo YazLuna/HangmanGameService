@@ -3,7 +3,7 @@ using System.ServiceModel;
 
 namespace HangmanGameService
 {
-    class Program
+    static class Program
     {
         static void Main()
         {
