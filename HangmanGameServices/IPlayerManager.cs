@@ -27,16 +27,16 @@ namespace HangmanGameService
         void SearchRepeatEmailAccount(string emailEdit, int idAccount);
 
         [OperationContract]
-        void SearchRepeatNicknamePlayer(string nickNameEdit, string nickNameCurrent);
+        void SearchRepeatNicknamePlayer(string nicknameEdit, string nicknameCurrent);
 
         [OperationContract]
         void UpdateEmail(string email, int idAccount);
 
         [OperationContract]
-        void UpdatePlayer(string nickName, ServicePlayer servicePlayerEdit);
+        void UpdatePlayer(string nickname, ServicePlayer servicePlayerEdit);
 
         [OperationContract]
-        void DeleteAccountPlayer(string nickName);
+        void DeleteAccountPlayer(string nickname);
     }
 
     [ServiceContract]

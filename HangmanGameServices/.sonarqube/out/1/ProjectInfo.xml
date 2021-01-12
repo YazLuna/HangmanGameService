@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>HangmanGameService</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>660bf614-5e8d-424b-8ed2-a2f406af93b6</ProjectGuid>
+  <FullPath>C:\Users\Ale_2\source\repos\HangmanGameServices\HangmanGameServices\HangmanGameService.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResults>
+    <AnalysisResult Id="FilesToAnalyze" Location="C:\Users\Ale_2\source\repos\HangmanGameServices\HangmanGameServices\.sonarqube\out\1\FilesToAnalyze.txt" />
+  </AnalysisResults>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">C:\Users\Ale_2\source\repos\HangmanGameServices\HangmanGameServices\bin\Debug\HangmanGameService.exe.RoslynCA.json|C:\Users\Ale_2\source\repos\HangmanGameServices\HangmanGameServices\bin\Debug\HangmanGameService.exe.RoslynCA.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">C:\Users\Ale_2\source\repos\HangmanGameServices\HangmanGameServices\.sonarqube\out\1</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+</ProjectInfo>

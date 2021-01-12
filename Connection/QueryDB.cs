@@ -30,8 +30,7 @@ namespace Connection
 						(accountSearch => accountSearch.email == email && accountSearch.passwordAccount == password);
 					if (account != null)
 					{
-						Player player = new Player();
-						player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == account.nickName &&
+						Player player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == account.nickName &&
 						playerSearch.statusPlayer == "Active");
 						if (player != null)
 						{
@@ -120,8 +119,7 @@ namespace Connection
 			{
 				try
 				{
-					Match match = new Match();
-					match = db.Match.SingleOrDefault(matchSearch => matchSearch.idMatch == idMatch);
+					Match match = db.Match.SingleOrDefault(matchSearch => matchSearch.idMatch == idMatch);
 					if (match != null)
 					{
 						foreach (Player player in players)
@@ -154,8 +152,7 @@ namespace Connection
 			{
 				try
 				{
-					Player player = new Player();
-					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
+					Player player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
 					if (player != null)
 					{
 						searchNickname = true;
@@ -186,8 +183,7 @@ namespace Connection
 					account = db.Account.SingleOrDefault(accountSearch => accountSearch.email == email);
 					if (account != null)
 					{
-						Player player = new Player();
-						player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == account.nickName &&
+						Player player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == account.nickName &&
 						playerSearch.statusPlayer == "Active");
 						if (player != null)
 						{
@@ -217,8 +213,7 @@ namespace Connection
 			{
 				try
 				{
-					Account account = new Account();
-					account = db.Account.SingleOrDefault(accountSearch => accountSearch.email == email);
+					Account account = db.Account.SingleOrDefault(accountSearch => accountSearch.email == email);
 					if (account != null)
 					{
 						account.passwordAccount = newPassword;
@@ -242,7 +237,7 @@ namespace Connection
 		/// <returns>The player's account</returns>
 		public Account SearchAccount(string email)
 		{
-			Account account = new Account();
+			Account account = null;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				try
@@ -265,7 +260,7 @@ namespace Connection
 		/// <returns>Player data</returns>
 		public Player SearchPlayer(string nickname)
 		{
-			Player player = new Player();
+			Player player = null;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				try
@@ -287,7 +282,7 @@ namespace Connection
 		/// <returns>List of players with the points obtained</returns>
 		public List<Player> SearchBestScoresPlayer()
 		{
-			List<Player> playersOrder = new List<Player>();
+			List<Player> playersOrder = null;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				try
@@ -311,7 +306,7 @@ namespace Connection
 		/// <returns>Player data</returns>
 		public Player SearchInformationPlayer(string email)
 		{
-			Player player = new Player();
+			Player player = null;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				try
@@ -341,8 +336,7 @@ namespace Connection
 			{
 				try
 				{
-					Account account = new Account();
-					account = db.Account.SingleOrDefault(accountSearch => accountSearch.email == emailEdit && accountSearch.idAccount != idAccount);
+					Account account = db.Account.SingleOrDefault(accountSearch => accountSearch.email == emailEdit && accountSearch.idAccount != idAccount);
 					if (account != null)
 					{
 						search = true;
@@ -370,8 +364,7 @@ namespace Connection
 			{
 				try
 				{
-					Player player = new Player();
-					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nicknameEdit && playerSearch.nickName != nicknameCurrent);
+					Player player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nicknameEdit && playerSearch.nickName != nicknameCurrent);
 					if (player != null)
 					{
 						search = true;
@@ -399,8 +392,7 @@ namespace Connection
 			{
 				try
 				{
-					Account account = new Account();
-					account = db.Account.SingleOrDefault(accountSearch => accountSearch.idAccount == idAccount);
+					Account account = db.Account.SingleOrDefault(accountSearch => accountSearch.idAccount == idAccount);
 					if (account != null)
 					{
 						account.email = email;
@@ -428,9 +420,8 @@ namespace Connection
 			bool updatePlayer = false;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
-				try {
-					Player player = new Player();
-					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
+				try { 
+					Player player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
 					if (player != null)
 					{
 						if (!string.IsNullOrWhiteSpace(playerEdit.namePlayer))
@@ -467,8 +458,7 @@ namespace Connection
 			{
 				try
 				{
-					Player player = new Player();
-					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
+					Player player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
 					if (player != null)
 					{
 						player.statusPlayer = "Inactive";
@@ -491,7 +481,7 @@ namespace Connection
 		/// <returns>The sentence found</returns>
 		public Sentence SearchSentence()
 		{
-			Sentence sentence = new Sentence();
+			Sentence sentence = null;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				try
@@ -541,8 +531,8 @@ namespace Connection
 		/// <param name="nickname">Nickname of the player</param>
 		/// <returns>The player report list</returns>
 		public List<ReportMisConduct> SearchReport(String nickname)
-		{
-			List<ReportMisConduct> reportMisConducts = new List<ReportMisConduct>();
+        {
+			List<ReportMisConduct> reportMisConducts = null;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				try
@@ -571,8 +561,7 @@ namespace Connection
 			{
 				try
 				{
-					Player player = new Player();
-					player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
+					Player player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);
 					if (player != null)
 					{
 						player.statusPlayer = "Report";
@@ -598,7 +587,7 @@ namespace Connection
 		public bool SavePoints(string nickname, int points)
 		{
 			bool save = false;
-			Player player = new Player();
+			Player player = null;
 			using (HangmanGameContext db = new HangmanGameContext())
 			{
 				player = db.Player.SingleOrDefault(playerSearch => playerSearch.nickName == nickname);

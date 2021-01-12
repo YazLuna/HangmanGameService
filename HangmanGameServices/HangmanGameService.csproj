@@ -69,7 +69,8 @@
     <Compile Include="IPlayConnect.cs" />
     <Compile Include="IPlayerManager.cs" />
     <Compile Include="IPlayerScoresManager.cs" />
-    <Compile Include="IReportManager.cs" />
+    <Compile Include="IReportList.cs" />
+    <Compile Include="IReportPlayer.cs" />
     <Compile Include="Number.cs" />
     <Compile Include="ServiceAccount.cs" />
     <Compile Include="ServicePlayer.cs" />

@@ -9,7 +9,7 @@ namespace HangmanGameService
         void SearchAccount(string email);
 
         [OperationContract]
-        void SearchPlayer(string nickName);
+        void SearchPlayer(string nickname);
     }
 
     [ServiceContract]

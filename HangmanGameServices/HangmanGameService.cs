@@ -192,11 +192,9 @@ namespace HangmanGameService
 		public void StartGame(string nickname)
 		{
 			isStartGame = true;
-			var connection = OperationContext.Current.GetCallbackChannel<IPlayConnectCallback>();
 			QueryDB consult = new QueryDB();
 			ServiceSentence serviceSentence = new ServiceSentence();
-			Sentence sentence = new Sentence();
-			sentence = consult.SearchSentence();
+			Sentence sentence = consult.SearchSentence();
 			serviceSentence.IdSentence = sentence.idSentence;
 			serviceSentence.HintSpanish = sentence.hintSpanish;
 			serviceSentence.ScoreSentence = sentence.scoreSentence;
@@ -205,10 +203,12 @@ namespace HangmanGameService
 			serviceSentence.SentenceWordEnglish = sentence.sentenceWordEnglish;
 			serviceSentence.Category = sentence.category;
 			DateTime dateTimeCurrent = DateTime.Now;
-			Match match = new Match();
-			match.idSentence = serviceSentence.IdSentence;
-			match.dateHour = dateTimeCurrent;
-			match.idMatch = consult.RegisterMatch(match);
+            Match match = new Match
+            {
+                idSentence = serviceSentence.IdSentence,
+                dateHour = dateTimeCurrent
+            };
+            match.idMatch = consult.RegisterMatch(match);
 			List<Player> players = new List<Player>();
 			foreach (ServicePlayer servicePlayerConnect in playersNickNameConnect)
 			{
@@ -263,8 +263,7 @@ namespace HangmanGameService
 		/// </summary>
 		public ServiceWinner SearchWinner()
 		{
-			ServiceWinner servicePlayerWinner = new ServiceWinner();
-			servicePlayerWinner = playersWinner[Number.NumberValue(NumberValues.ZERO)];
+			ServiceWinner servicePlayerWinner = playersWinner[Number.NumberValue(NumberValues.ZERO)];
 			for (int index = 1; index < playersWinner.Count; index++)
 			{
 				if (playersWinner[index].Points > servicePlayerWinner.Points)
@@ -281,12 +280,10 @@ namespace HangmanGameService
 						}
 						else
 						{
-							if (playersWinner[index].Mistakes == servicePlayerWinner.Mistakes)
+							if (playersWinner[index].Mistakes == servicePlayerWinner.Mistakes &&
+								playersWinner[index].Time < servicePlayerWinner.Time)
 							{
-								if (playersWinner[index].Time < servicePlayerWinner.Time)
-								{
-									servicePlayerWinner = playersWinner[index];
-								}
+								servicePlayerWinner = playersWinner[index];
 							}
 						}
 					}
@@ -312,7 +309,7 @@ namespace HangmanGameService
 	/// <summary>
 	/// This service is used to manage reports
 	/// </summary>
-	public partial class HangmanGameService : IReportManager
+	public partial class HangmanGameService : IReportPlayer
 	{
 		/// <summary>
 		/// Used to record a report from one player to another
@@ -338,7 +335,13 @@ namespace HangmanGameService
 			}
 			OperationContext.Current.GetCallbackChannel<IReportCallback>().ResponseReportPlayer(isReport);
 		}
+	}
 
+	/// <summary>
+	/// This service is used to manage reports list
+	/// </summary>
+	public partial class HangmanGameService : IReportList
+	{
 		/// <summary>
 		/// Used toIt is used to retrieve the list of reports for a specific player
 		/// </summary>
@@ -358,7 +361,7 @@ namespace HangmanGameService
 				};
 				serviceReportList.Add(serviceReport);
 			}
-			OperationContext.Current.GetCallbackChannel<IReportCallback>().ResponseReportList(serviceReportList);
+			OperationContext.Current.GetCallbackChannel<IReportListCallback>().ResponseReportList(serviceReportList);
 		}
 	}
 
@@ -394,11 +397,11 @@ namespace HangmanGameService
 		/// Change an account password
 		/// </summary>
 		/// <param name="email">Player's email.</param>
-		/// <param name="password">Player's new password.</param>
-		public void ChangePassword(string email, string password)
+		/// <param name="newPassword">Player's new password.</param>
+		public void ChangePassword(string email, string newPassword)
 		{
 			QueryDB consult = new QueryDB();
-			bool change = consult.ChangePassword(email, password);
+			bool change = consult.ChangePassword(email, newPassword);
 			OperationContext.Current.GetCallbackChannel<IPlayerCallback>().PlayerResponseBoolean(change);
 		}
 
@@ -406,8 +409,8 @@ namespace HangmanGameService
 		/// Register an account associated with a player in the database
 		/// </summary>
 		/// <param name="account">Object with a player's account information.</param>
-		/// <param name="accountPlayer">Object with a player information</param>
-		public void Register(ServiceAccount account, ServicePlayer accountPlayer)
+		/// <param name="servicePlayer">Object with a player information</param>
+		public void Register(ServiceAccount account, ServicePlayer servicePlayer)
 		{
 			QueryDB consult = new QueryDB();
 			Account dataAccount = new Account
@@ -415,15 +418,15 @@ namespace HangmanGameService
 				email = account.Email,
 				passwordAccount = account.PasswordAccount,
 				confirmationCode = account.ConfirmationCode,
-				nickName = accountPlayer.NickName
+				nickName = servicePlayer.NickName
 			};
 
 			Player dataPlayer = new Player
 			{
-				namePlayer = accountPlayer.NamePlayer,
-				lastName = accountPlayer.LastName,
-				statusPlayer = accountPlayer.StatusPlayer,
-				nickName = accountPlayer.NickName
+				namePlayer = servicePlayer.NamePlayer,
+				lastName = servicePlayer.LastName,
+				statusPlayer = servicePlayer.StatusPlayer,
+				nickName = servicePlayer.NickName
 			};
 
 			bool register = consult.RegisterPlayer(dataAccount, dataPlayer);
@@ -448,9 +451,11 @@ namespace HangmanGameService
 		/// <param name="code">Player's code to send.</param>
 		public void SendEmail(string email, int code)
 		{
+			String emailGame = "hangmangameproject@gmail.com";
+			String owner = "Martha-Yazminz4";
 			MailMessage correo = new MailMessage
 			{
-				From = new MailAddress("hangmangameproject@gmail.com", "HangmanGame", System.Text.Encoding.UTF8)
+				From = new MailAddress(emailGame, "HangmanGame", System.Text.Encoding.UTF8)
 			};
 			correo.To.Add(email);
 			correo.Subject = "Code";
@@ -462,7 +467,7 @@ namespace HangmanGameService
 				UseDefaultCredentials = false,
 				Host = "smtp.gmail.com",
 				Port = 587,
-				Credentials = new System.Net.NetworkCredential("hangmangameproject@gmail.com", "Martha-Yazminz4")
+				Credentials = new NetworkCredential(emailGame, owner)
 			};
 			ServicePointManager.ServerCertificateValidationCallback =
 				delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
@@ -585,17 +590,6 @@ namespace HangmanGameService
 		}
 
 		/// <summary>
-		/// Retrieve the messages
-		/// </summary>
-		/// <param name="nickname">Player's nickname to retrieve the messages.</param>
-		public void GetNewMessages(string nickname)
-		{
-			//List<string> myNewMessages = incomingMessages[nickname];
-			//incomingMessages[nickname].Clear();
-			//OperationContext.Current.GetCallbackChannel<IChatCallback>().PlayerEntryMessages(myNewMessages);
-		}
-
-		/// <summary>
 		/// Send a message to all registered players in the chat
 		/// </summary>
 		/// <param name="newMessage">The sender player's message.</param>
@@ -607,7 +601,7 @@ namespace HangmanGameService
 			{
 				if (!connection.Equals(result.Value))
 				{
-					result.Value.PlayerEntryMessages(newMessage);
+					result.Value.PlayerEntryMessages(nickname+": "+newMessage);
 				}
 			}
 			OperationContext.Current.GetCallbackChannel<IChatCallback>().ChatResponseBoolean(true);
